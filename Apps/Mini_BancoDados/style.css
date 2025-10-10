@@ -392,27 +392,29 @@
             transform: scale(1.05);
         }
 
-        .field-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+                .field-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+        
+        @media (max-width: 600px) {
             h1 {
                 font-size: 32px;
             }
-
+        
             .main-card {
                 padding: 25px;
             }
-
+        
             .form-grid {
                 grid-template-columns: 1fr;
             }
-
+        
             table {
                 font-size: 14px;
             }
-
+        
             th, td {
                 padding: 10px;
             }

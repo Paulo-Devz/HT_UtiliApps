@@ -6,5 +6,5 @@ LINK WEBSITE: https://utiliapps.vercel.app/
 
 # PUBLISH UPDATE
 git add .
-git commit -u "UPDATE 01"
+git commit -m "UPDATE 01"
 git push

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Banco de Dados</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="src/imgs/UTILI.png">
+</head>
+<body>
+    <!-- Grid Background -->
+    <div class="grid-background"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>
+                <span>💾</span>
+                Mini Banco de Dados
+            </h1>
+            <p class="subtitle">Gerencie seus clientes e produtos localmente</p>
+        </header>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="clients">👥 Clientes</button>
+            <button class="tab-btn" data-tab="products">📦 Produtos</button>
+        </div>
+
+        <!-- Main Card -->
+        <div class="main-card">
+            <!-- Clients Tab -->
+            <div class="tab-content active" id="clients">
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalClients">0</div>
+                        <div class="stat-label">Total de Clientes</div>
+                    </div>
+                </div>
+
+                <!-- Form -->
+                <div class="form-section">
+                    <div class="form-title">⚙️ Configurar Campos</div>
+                    <div class="form-grid" style="margin-bottom: 20px;">
+                        <div class="form-group">
+                            <label>Nome do Campo</label>
+                            <input type="text" id="newFieldName" placeholder="Ex: Cargo, Cidade, etc...">
+                        </div>
+                        <div class="form-group">
+                            <label>Tipo do Campo</label>
+                            <select id="newFieldType">
+                                <option value="text">Texto</option>
+                                <option value="email">Email</option>
+                                <option value="tel">Telefone</option>
+                                <option value="number">Número</option>
+                                <option value="date">Data</option>
+                                <option value="textarea">Texto Longo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-primary" onclick="addClientField()" style="margin-bottom: 20px;">➕ Adicionar Campo</button>
+                    
+                    <div class="form-title" style="margin-top: 30px;">➕ Adicionar Cliente</div>
+                    <form id="clientForm">
+                        <div class="form-grid" id="clientFieldsContainer">
+                            <!-- Dynamic fields will be inserted here -->
+                        </div>
+                        <button type="submit" class="btn-primary">💾 Salvar Cliente</button>
+                    </form>
+                </div>
+
+                <!-- Search -->
+                <div class="search-section">
+                    <div class="search-bar">
+                        <input type="text" class="search-input" id="searchClients" placeholder="🔍 Buscar clientes...">
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="table-container">
+                    <table id="clientsTableElement">
+                        <thead>
+                            <tr id="clientsTableHeader">
+                                <!-- Headers serão gerados dinamicamente -->
+                            </tr>
+                        </thead>
+                        <tbody id="clientsTable">
+                            <!-- Clients will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Products Tab -->
+            <div class="tab-content" id="products">
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalProducts">0</div>
+                        <div class="stat-label">Total de Produtos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalStock">0</div>
+                        <div class="stat-label">Estoque Total</div>
+                    </div>
+                </div>
+
+                <!-- Form -->
+                <div class="form-section">
+                    <div class="form-title">➕ Adicionar Produto</div>
+                    <form id="productForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Nome do Produto *</label>
+                                <input type="text" id="productName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Categoria</label>
+                                <input type="text" id="productCategory">
+                            </div>
+                            <div class="form-group">
+                                <label>Preço (R$) *</label>
+                                <input type="number" id="productPrice" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Estoque *</label>
+                                <input type="number" id="productStock" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Descrição</label>
+                            <textarea id="productDescription"></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary">💾 Salvar Produto</button>
+                    </form>
+                </div>
+
+                <!-- Search -->
+                <div class="search-section">
+                    <div class="search-bar">
+                        <input type="text" class="search-input" id="searchProducts" placeholder="🔍 Buscar produtos...">
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th>Categoria</th>
+                                <th>Preço</th>
+                                <th>Estoque</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTable">
+                            <!-- Products will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

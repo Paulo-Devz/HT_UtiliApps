@@ -16,28 +16,28 @@
         const programs = [
             {
                 dono: "TIO PAULO",
-                nomePrograma: "PÁGINA EM BRANCO",
-                tipoPrograma: "Apenas para Teste.",
+                nomePrograma: "Checklist de Produtividade",
+                tipoPrograma: "CHECKLIST",
                 foto: "src/imgs/imgs++/tioPaulo.png",
-                descricao: "Foi dificil, 1 semana de Projeto!",
-                fixado: true,
+                descricao: "Uma checklist Avançada com Salvamento de Dados!",
+                fixado: false,
                 link: "",
-                src: "Apps/teste.html",
-                dataCriacao: "02/10/2025",
-                videoIlustration: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                src: "Apps/Checklist_Produtividade/main.html",
+                dataCriacao: "10/10/2025",
+                videoIlustration: "https://youtu.be/itue2_7etkA"
             },
             {
                 dono: "TIO PAULO",
-                nomePrograma: "PÁGINA EM BRANCO",
-                tipoPrograma: "Apenas para Teste.",
+                nomePrograma: "Gestor de Clientes e Produtos",
+                tipoPrograma: "ARMAZENAMENTO",
                 foto: "src/imgs/imgs++/tioPaulo.png",
-                descricao: "Foi dificil, 1 semana de Projeto!",
-                fixado: false,
+                descricao: "Uma checklist Avançada com Salvamento de Dados!",
+                fixado: true,
                 link: "",
-                src: "Apps/teste.html",
-                dataCriacao: "02/10/2025",
-                videoIlustration: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-            }
+                src: "Apps/Mini_BancoDados/main.html",
+                dataCriacao: "10/10/2025",
+                videoIlustration: "https://youtu.be/hjlIUGE22e4"
+            },
         ];
 
         // Função para criar card de programa

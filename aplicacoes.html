@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utili APPS - Programas</title>
+    <link rel="stylesheet" href="src/style/aplicacoes.css">
+    <link rel="icon" href="src/imgs/UTILI.png">
+</head>
+<body>
+    <!-- Background Elements -->
+    <div class="bg-grid"></div>
+    <div class="grid-lines"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">UTILI APPS</div>
+        <nav>
+            <a href="contato.html">CONTATO</a>
+            <a href="index.html" class="btn-home">HOME</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="search-section">
+            <h1 class="page-title">PROGRAMAS</h1>
+            <div class="search-container">
+                <div class="search-box">
+                    <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <input type="text" id="searchInput" placeholder="BARRA D PESQUISA">
+                </div>
+            </div>
+            <div class="search-result" id="searchResult">PESQUISA: NULL</div>
+        </div>
+
+        <div class="programs-grid" id="programsGrid">
+            <!-- Cards serão gerados via JavaScript -->
+        </div>
+    </main>
+
+    <script src="src/scripts/aplicacoes.js"></script>
+</body>
+</html>

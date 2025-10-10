@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utili APPS - Detalhes</title>
+    <link rel="stylesheet" href="src/style/detalhes.css">
+    <link rel="icon" href="src/imgs/UTILI.png">
+</head>
+<body>
+    <!-- Background Elements -->
+    <div class="bg-grid"></div>
+    <div class="grid-lines"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">UTILI APPS</div>
+        <nav>
+            <a href="contato.html">CONTATO</a>
+            <a href="aplicacoes.html" class="btn-aplicacoes">APLICAÇÕES</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="details-header">
+            <h1 class="page-title">DETALHES</h1>
+            <button class="btn-abrir-programa" id="btnAbrirPrograma">ABRIR PROGRAMA</button>
+        </div>
+
+        <div class="details-container">
+            <!-- Coluna Esquerda -->
+            <div class="info-section">
+                <div class="owner-info">
+                    <img src="" alt="Dono" class="owner-photo" id="ownerPhoto">
+                    <div class="owner-text">
+                        <div class="owner-label">DONO</div>
+                        <div class="owner-name" id="ownerName">-</div>
+                    </div>
+                </div>
+                <div class="program-name" id="programName">-</div>
+            </div>
+
+            <!-- Coluna Direita -->
+            <div class="info-section">
+                <div class="info-group">
+                    <div class="info-label">INFORMAÇÕES ADICIONAIS</div>
+                    <div class="info-value" id="additionalInfo">-</div>
+                </div>
+                <div class="info-divider"></div>
+                <div class="info-group">
+                    <div class="info-label">DATA DE CRIAÇÃO</div>
+                    <div class="info-value" id="creationDate">00/00/00</div>
+                </div>
+            </div>
+
+            <!-- Descrição -->
+            <div class="info-section description-section">
+                <div class="info-label">DESCRIÇÃO</div>
+                <div class="description-text" id="description">-</div>
+            </div>
+
+            <!-- Vídeo Ilustrativo -->
+            <div class="video-section">
+                <div class="video-title">VÍDEO ILUSTRATIVO</div>
+                <div id="videoError" class="video-error" style="display: none;">
+                    ⚠️ Este vídeo não pode ser incorporado. O criador desabilitou a reprodução em sites externos.
+                </div>
+                <div class="video-container" id="videoContainer">
+                    <iframe 
+                        id="videoFrame"
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="video-controls">
+                    <button class="video-btn" id="btnPlayPause">▶</button>
+                    <a href="" target="_blank" class="btn-open-youtube" id="btnOpenYoutube" style="display: none;">
+                        🎬 ABRIR NO YOUTUBE
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="src/scripts/detalhes.js"></script>
+</body>
+</html>

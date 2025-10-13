@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Arquivos</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="../../src/imgs/UTILI.png">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📄 Conversor de Arquivos</h1>
+            <p class="subtitle">Converta seus arquivos instantaneamente no navegador</p>
+        </header>
+
+        <div class="main-card">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📁</div>
+                <div class="upload-text">Clique ou arraste um arquivo aqui</div>
+                <div class="upload-hint">Suporta: Imagens (JPG, PNG, WebP) e Texto (TXT)</div>
+            </div>
+            <input type="file" id="fileInput" accept="image/*,.txt">
+
+            <div class="file-info" id="fileInfo">
+                <div class="file-name" id="fileName">📄 arquivo.jpg</div>
+                <div class="file-size" id="fileSize">Tamanho: 0 KB</div>
+            </div>
+
+            <div class="conversion-options" id="conversionOptions">
+                <div class="options-title">Converter para:</div>
+                <div class="format-grid" id="formatGrid"></div>
+            </div>
+
+            <div class="progress-section" id="progressSection">
+                <div class="progress-text" id="progressText">Convertendo...</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-convert" id="btnConvert" disabled>🔄 Converter Arquivo</button>
+                <button class="btn btn-reset" id="btnReset">🔄 Novo Arquivo</button>
+            </div>
+
+            <button class="btn btn-download" id="btnDownload">💾 Baixar Arquivo Convertido</button>
+
+            <div class="supported-formats">
+                <div class="supported-title">Formatos Suportados:</div>
+                <div class="formats-list">
+                    <span class="format-tag">JPG ↔️ PNG</span>
+                    <span class="format-tag">PNG ↔️ WebP</span>
+                    <span class="format-tag">JPG ↔️ WebP</span>
+                    <span class="format-tag">TXT ↔️ JSON</span>
+                    <span class="format-tag">Imagem → Base64</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

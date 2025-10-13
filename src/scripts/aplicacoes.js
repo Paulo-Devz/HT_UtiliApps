@@ -62,6 +62,30 @@
                 dataCriacao: "12/10/2025",
                 videoIlustration: "https://youtu.be/GqPvdUhTfGQ"
             },
+            {
+                dono: "TIO PAULO",
+                nomePrograma: "Mapa Mental Online",
+                tipoPrograma: "MAPA MENTAL",
+                foto: "src/imgs/imgs++/tioPaulo.png",
+                descricao: "Mapa Mental Online para Você Usar!",
+                fixado: false,
+                link: "",
+                src: "Apps/MapaMental_Online/main.html",
+                dataCriacao: "13/10/2025",
+                videoIlustration: "https://youtu.be/ps25wMb4dRQ"
+            },
+            {
+                dono: "TIO PAULO",
+                nomePrograma: "Conversor de Arquivos",
+                tipoPrograma: "CONVERSOR",
+                foto: "src/imgs/imgs++/tioPaulo.png",
+                descricao: "Conversor de Arquivos Gratuito!",
+                fixado: false,
+                link: "",
+                src: "Apps/Conversor_Arquivos/main.html",
+                dataCriacao: "13/10/2025",
+                videoIlustration: "https://youtu.be/w0L5oRzNQJk"
+            },
         ];
 
         // Função para criar card de programa

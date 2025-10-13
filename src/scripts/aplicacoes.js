@@ -38,6 +38,30 @@
                 dataCriacao: "10/10/2025",
                 videoIlustration: "https://youtu.be/hjlIUGE22e4"
             },
+            {
+                dono: "TIO PAULO",
+                nomePrograma: "Calculadora Financeira",
+                tipoPrograma: "ADMINISTRAÇÃO",
+                foto: "src/imgs/imgs++/tioPaulo.png",
+                descricao: "Uma Calculadora Que Possui Juros, Parcelamento e Investimento!",
+                fixado: false,
+                link: "",
+                src: "Apps/Calculadora_Financeira/main.html",
+                dataCriacao: "12/10/2025",
+                videoIlustration: "https://youtu.be/7qwDRgJGda0"
+            },
+            {
+                dono: "TIO PAULO",
+                nomePrograma: "Editor de Foto Rápido",
+                tipoPrograma: "EDITOR",
+                foto: "src/imgs/imgs++/tioPaulo.png",
+                descricao: "Editor de Foto Com Multifuncionalidades!",
+                fixado: true,
+                link: "",
+                src: "Apps/Editor_Foto/main.html",
+                dataCriacao: "12/10/2025",
+                videoIlustration: "https://youtu.be/GqPvdUhTfGQ"
+            },
         ];
 
         // Função para criar card de programa

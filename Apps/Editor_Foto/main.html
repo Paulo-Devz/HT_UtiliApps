@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor de Fotos</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="../../src/imgs/UTILI.png">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📸 Editor de Fotos Rápido</h1>
+            <p class="subtitle">Edite suas fotos em segundos e baixe instantaneamente</p>
+        </header>
+
+        <div class="main-grid">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Upload -->
+                <div class="upload-section">
+                    <input type="file" id="fileInput" accept="image/*">
+                    <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                        📁 Fazer Upload de Foto
+                    </button>
+                </div>
+
+                <!-- Ajustes Básicos -->
+                <div class="controls-group">
+                    <div class="section-title">⚡ Ajustes Básicos</div>
+                    
+                    <div class="control-item">
+                        <div class="control-label">
+                            <span>Brilho</span>
+                            <span class="control-value" id="brightnessValue">0</span>
+                        </div>
+                        <input type="range" id="brightness" min="-100" max="100" value="0">
+                    </div>
+
+                    <div class="control-item">
+                        <div class="control-label">
+                            <span>Contraste</span>
+                            <span class="control-value" id="contrastValue">100</span>
+                        </div>
+                        <input type="range" id="contrast" min="0" max="200" value="100">
+                    </div>
+
+                    <div class="control-item">
+                        <div class="control-label">
+                            <span>Saturação</span>
+                            <span class="control-value" id="saturationValue">100</span>
+                        </div>
+                        <input type="range" id="saturation" min="0" max="200" value="100">
+                    </div>
+
+                    <div class="control-item">
+                        <div class="control-label">
+                            <span>Nitidez</span>
+                            <span class="control-value" id="sharpnessValue">0</span>
+                        </div>
+                        <input type="range" id="sharpness" min="0" max="100" value="0">
+                    </div>
+
+                    <div class="control-item">
+                        <div class="control-label">
+                            <span>Desfoque</span>
+                            <span class="control-value" id="blurValue">0</span>
+                        </div>
+                        <input type="range" id="blur" min="0" max="20" value="0">
+                    </div>
+                </div>
+
+                <!-- Filtros -->
+                <div class="controls-group">
+                    <div class="section-title">✨ Filtros</div>
+                    <div class="filters-grid">
+                        <button class="filter-btn active" data-filter="none">Original</button>
+                        <button class="filter-btn" data-filter="grayscale">P&B</button>
+                        <button class="filter-btn" data-filter="sepia">Sépia</button>
+                        <button class="filter-btn" data-filter="invert">Negativo</button>
+                        <button class="filter-btn" data-filter="vintage">Vintage</button>
+                        <button class="filter-btn" data-filter="warm">Quente</button>
+                        <button class="filter-btn" data-filter="cold">Frio</button>
+                        <button class="filter-btn" data-filter="vibrant">Vibrante</button>
+                    </div>
+                </div>
+
+                <!-- Transformações -->
+                <div class="controls-group">
+                    <div class="section-title">🔄 Transformar</div>
+                    <button class="btn-action" style="background: #667eea; color: white;" onclick="rotateImage()">↻ Girar 90°</button>
+                    <button class="btn-action" style="background: #667eea; color: white;" onclick="flipHorizontal()">↔️ Espelhar</button>
+                </div>
+
+                <!-- Adicionar Texto -->
+                <div class="controls-group">
+                    <div class="section-title">📝 Adicionar Texto</div>
+                    <input type="text" class="input-text" id="textInput" placeholder="Digite o texto...">
+                    <select id="textPosition">
+                        <option value="top">Topo</option>
+                        <option value="center">Centro</option>
+                        <option value="bottom">Inferior</option>
+                    </select>
+                    <button class="btn-action" style="background: #667eea; color: white;" onclick="addText()">Adicionar Texto</button>
+                </div>
+
+                <!-- Ações -->
+                <div class="controls-group">
+                    <button class="btn-action btn-reset" onclick="resetImage()">🔄 Resetar Tudo</button>
+                    <button class="btn-action btn-download" onclick="downloadImage()">💾 Baixar Foto</button>
+                </div>
+            </div>
+
+            <!-- Canvas Area -->
+            <div class="canvas-area">
+                <div id="emptyState" class="empty-state">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <h3>Nenhuma imagem carregada</h3>
+                    <p>Faça upload de uma foto para começar a editar</p>
+                </div>
+                <div class="canvas-container" id="canvasContainer" style="display: none;">
+                    <canvas id="canvas"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

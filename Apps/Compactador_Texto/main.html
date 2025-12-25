@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compactador de Texto</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="../../src/imgs/UTILI.png">
+</head>
+<body>
+    <button class="dark-mode-toggle" style="display: none;" id="darkModeToggle">🌙</button>
+
+    <div class="container">
+        <div class="header">
+            <h1>📝 Compactador de Texto</h1>
+            <p class="subtitle">Reduza o tamanho do seu texto removendo espaços e linhas desnecessárias</p>
+        </div>
+
+        <div class="form-group">
+            <label>Cole seu texto aqui:</label>
+            <textarea id="textInput" placeholder="Digite ou cole o texto que deseja compactar..."></textarea>
+        </div>
+
+        <button class="btn-compact" id="compactBtn">🔄 Compactar Texto</button>
+
+        <div class="result" id="result">
+            <div class="stats">
+                <span id="charBefore">Caracteres originais: 0</span>
+                <span id="charAfter">Caracteres compactados: 0</span>
+                <span id="reduction">Redução: 0%</span>
+            </div>
+            <div class="output-text" id="outputText"></div>
+            <button class="btn-copy" id="copyBtn">📋 Copiar Texto Compactado</button>
+        </div>
+    </div>
+
+    <div class="ad-modal" id="adModal">
+        <div class="ad-content">
+            <h2>📺 Aguarde o anúncio</h2>
+            <div class="ad-timer" id="adTimer">5</div>
+            <p class="ad-message">Seu texto compactado estará pronto em breve...</p>
+            <button class="btn-close-ad" id="closeAdBtn">✅ Mostrar Resultado</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

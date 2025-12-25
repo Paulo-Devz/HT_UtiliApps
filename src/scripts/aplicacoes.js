@@ -15,7 +15,44 @@
         // Lista de programas
         const programs = [
             {
-                dono: "TIO PAULO",
+                dono: "PAULO",
+                nomePrograma: "Gerador de QR-CODE",
+                tipoPrograma: "GERADOR",
+                foto: "src/imgs/imgs++/tioPaulo.png",
+                descricao: "Um avançado gerador de QR-CODE!",
+                fixado: true,
+                link: "",
+                src: "Apps/Gerador_QRCODE/main.html",
+                dataCriacao: "25/12/2025",
+                videoIlustration: ""
+            },
+            {
+                dono: "PAULO",
+                nomePrograma: "Compactador de Texto",
+                tipoPrograma: "EDITOR",
+                foto: "src/imgs/imgs++/tioPaulo.png",
+                descricao: "Compactador de Texto Simples para o Dia Dia!",
+                fixado: false,
+                link: "",
+                src: "Apps/Compactador_Texto/main.html",
+                dataCriacao: "25/12/2025",
+                videoIlustration: ""
+            },
+            {
+                dono: "FREEGAMES",
+                nomePrograma: "FREEGAMES",
+                tipoPrograma: "JOGOS",
+                foto: "src/imgs/imgs++/FREEGAMES.jpg",
+                descricao: "Jogos online da FREE GAMES!",
+                fixado: false,
+                link: "",
+                src: "Apps/Compactador_Texto/main.html",
+                dataCriacao: "25/12/2025",
+                videoIlustration: ""
+            },
+            // www.freegames.com
+            {
+                dono: "PAULO",
                 nomePrograma: "Checklist de Produtividade",
                 tipoPrograma: "CHECKLIST",
                 foto: "src/imgs/imgs++/tioPaulo.png",
@@ -27,7 +64,7 @@
                 videoIlustration: "https://youtu.be/itue2_7etkA"
             },
             {
-                dono: "TIO PAULO",
+                dono: "PAULO",
                 nomePrograma: "Gestor de Clientes e Produtos",
                 tipoPrograma: "ARMAZENAMENTO",
                 foto: "src/imgs/imgs++/tioPaulo.png",
@@ -39,7 +76,7 @@
                 videoIlustration: "https://youtu.be/hjlIUGE22e4"
             },
             {
-                dono: "TIO PAULO",
+                dono: "PAULO",
                 nomePrograma: "Calculadora Financeira",
                 tipoPrograma: "ADMINISTRAÇÃO",
                 foto: "src/imgs/imgs++/tioPaulo.png",
@@ -51,7 +88,7 @@
                 videoIlustration: "https://youtu.be/7qwDRgJGda0"
             },
             {
-                dono: "TIO PAULO",
+                dono: "PAULO",
                 nomePrograma: "Editor de Foto Rápido",
                 tipoPrograma: "EDITOR",
                 foto: "src/imgs/imgs++/tioPaulo.png",
@@ -63,7 +100,7 @@
                 videoIlustration: "https://youtu.be/GqPvdUhTfGQ"
             },
             {
-                dono: "TIO PAULO",
+                dono: "PAULO",
                 nomePrograma: "Mapa Mental Online",
                 tipoPrograma: "MAPA MENTAL",
                 foto: "src/imgs/imgs++/tioPaulo.png",
@@ -75,7 +112,7 @@
                 videoIlustration: "https://youtu.be/ps25wMb4dRQ"
             },
             {
-                dono: "TIO PAULO",
+                dono: "PAULO",
                 nomePrograma: "Conversor de Arquivos",
                 tipoPrograma: "CONVERSOR",
                 foto: "src/imgs/imgs++/tioPaulo.png",

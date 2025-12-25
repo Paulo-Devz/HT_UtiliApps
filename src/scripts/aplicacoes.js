@@ -45,8 +45,8 @@
                 foto: "src/imgs/imgs++/FREEGAMES.jpg",
                 descricao: "Jogos online da FREE GAMES!",
                 fixado: false,
-                link: "",
-                src: "Apps/Compactador_Texto/main.html",
+                link: "www.freegames.com",
+                src: "",
                 dataCriacao: "25/12/2025",
                 videoIlustration: ""
             },

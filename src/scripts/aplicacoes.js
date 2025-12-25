@@ -45,12 +45,12 @@
                 foto: "src/imgs/imgs++/FREEGAMES.jpg",
                 descricao: "Jogos online da FREE GAMES!",
                 fixado: false,
-                link: "www.freegames.com",
+                link: "https://freegames.com",
                 src: "",
                 dataCriacao: "25/12/2025",
                 videoIlustration: ""
             },
-            // www.freegames.com
+            // https://www.freegames.com
             {
                 dono: "PAULO",
                 nomePrograma: "Checklist de Produtividade",

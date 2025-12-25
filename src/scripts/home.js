@@ -24,18 +24,18 @@
 
         // Feedbacks data
         const feedbacks = [
-            {
-                name: "Tio Paulo",
-                role: "DONO",
-                photo: "src/imgs/imgs++/tioPaulo.png",
-                feedback: "Pensa num Site Bom, Bunito!"
-            },
-            {
-                name: "Tio Paulo 2",
-                role: "DONO",
-                photo: "src/imgs/imgs++/tioPaulo.png",
-                feedback: "Very good Esse Site!"
-            }
+            // {
+            //     name: "Tio Paulo",
+            //     role: "DONO",
+            //     photo: "src/imgs/imgs++/tioPaulo.png",
+            //     feedback: "Pensa num Site Bom, Bunito!"
+            // },
+            // {
+            //     name: "Tio Paulo 2",
+            //     role: "DONO",
+            //     photo: "src/imgs/imgs++/tioPaulo.png",
+            //     feedback: "Very good Esse Site!"
+            // }
         ];
 
         // Populate carousel

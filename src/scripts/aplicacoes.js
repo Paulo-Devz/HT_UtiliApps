@@ -20,7 +20,7 @@
                 tipoPrograma: "GERADOR",
                 foto: "src/imgs/imgs++/tioPaulo.png",
                 descricao: "Um avançado gerador de QR-CODE!",
-                fixado: true,
+                fixado: false,
                 link: "",
                 src: "Apps/Gerador_QRCODE/main.html",
                 dataCriacao: "25/12/2025",
@@ -37,6 +37,18 @@
                 src: "Apps/Compactador_Texto/main.html",
                 dataCriacao: "25/12/2025",
                 videoIlustration: ""
+            },
+            {
+                dono: "PAULO",
+                nomePrograma: "Temporal",
+                tipoPrograma: "TEMPO",
+                foto: "src/imgs/imgs++/tioPaulo.png",
+                descricao: "Veja o temporal de alguma cidade!",
+                fixado: false,
+                link: "",
+                src: "Apps/Temporal/main.html",
+                dataCriacao: "16/03/2026",
+                videoIlustration: "https://youtu.be/w0L5oRzNQJk"
             },
             {
                 dono: "FREEGAMES",
@@ -69,7 +81,7 @@
                 tipoPrograma: "ARMAZENAMENTO",
                 foto: "src/imgs/imgs++/tioPaulo.png",
                 descricao: "Uma checklist Avançada com Salvamento de Dados!",
-                fixado: true,
+                fixado: false,
                 link: "",
                 src: "Apps/Mini_BancoDados/main.html",
                 dataCriacao: "10/10/2025",
@@ -121,6 +133,30 @@
                 link: "",
                 src: "Apps/Conversor_Arquivos/main.html",
                 dataCriacao: "13/10/2025",
+                videoIlustration: "https://youtu.be/w0L5oRzNQJk"
+            },
+            {
+                dono: "PAULO",
+                nomePrograma: "Quick Tools",
+                tipoPrograma: "TOOL",
+                foto: "src/imgs/imgs++/tioPaulo.png",
+                descricao: "Mini função para pegar IP, Testar Wi-Fi e Gerar cores!",
+                fixado: true,
+                link: "",
+                src: "Apps/Quick_Tools/main.html",
+                dataCriacao: "16/03/2026",
+                videoIlustration: "https://youtu.be/w0L5oRzNQJk"
+            },
+            {
+                dono: "PAULO",
+                nomePrograma: "Text Shortner",
+                tipoPrograma: "EDITOR",
+                foto: "src/imgs/imgs++/tioPaulo.png",
+                descricao: "Resuma qualquer tipo de texto, explicação e tópicos!",
+                fixado: true,
+                link: "",
+                src: "Apps/Text_Shortner/main.html",
+                dataCriacao: "16/03/2026",
                 videoIlustration: "https://youtu.be/w0L5oRzNQJk"
             },
         ];

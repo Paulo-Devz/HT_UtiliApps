@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Encurtador de Texto</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="../../src/imgs/UTILI.png">
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Encurtador de <span class="accent">Texto</span></h1>
+    <p>Cole um texto, escolha o nível de compressão e gere um resumo com IA</p>
+  </header>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Palavras — Original</div>
+      <div class="stat-val" id="st-words-in">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Palavras — Resumo</div>
+      <div class="stat-val purple" id="st-words-out">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Chars — Original</div>
+      <div class="stat-val" id="st-chars-in">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Redução</div>
+      <div class="stat-val green" id="st-reduction">—</div>
+    </div>
+  </div>
+
+  <div class="controls-bar">
+    <div class="control-group">
+      <label>Nível:</label>
+      <div class="seg-control">
+        <button class="seg-btn"    onclick="setLevel('light',this)">Leve</button>
+        <button class="seg-btn on" onclick="setLevel('medium',this)">Médio</button>
+        <button class="seg-btn"    onclick="setLevel('heavy',this)">Agressivo</button>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="control-group">
+      <label>Formato:</label>
+      <div class="seg-control">
+        <button class="seg-btn on" onclick="setFmt('paragraph',this)">Parágrafo</button>
+        <button class="seg-btn"    onclick="setFmt('bullets',this)">Tópicos</button>
+        <button class="seg-btn"    onclick="setFmt('oneline',this)">Uma linha</button>
+      </div>
+    </div>
+    <div class="ml-auto">
+      <button class="btn btn-primary" id="main-btn" onclick="summarize()" disabled>
+        ✦ Resumir com IA
+      </button>
+    </div>
+  </div>
+
+  <div class="editor-grid">
+    <div class="editor-box">
+      <div class="editor-header">
+        <span class="editor-label"><span class="dot active"></span>Texto original</span>
+        <span class="editor-meta" id="meta-in">0 palavras</span>
+      </div>
+      <textarea id="input-text" placeholder="Cole ou digite seu texto aqui..."></textarea>
+    </div>
+
+    <div class="editor-box">
+      <div id="loading-bar-wrap" style="height:3px;"></div>
+      <div class="editor-header">
+        <span class="editor-label"><span class="dot" id="out-dot"></span>Texto resumido</span>
+        <span class="editor-meta" id="meta-out">—</span>
+      </div>
+      <div class="output-text" id="output-text">
+        <div class="empty-state">
+          <span class="empty-icon">✦</span>
+          <span>O resumo aparecerá aqui</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="action-row">
+    <div class="btn-group">
+      <button class="btn btn-secondary" onclick="clearAll()">Limpar tudo</button>
+      <button class="btn btn-secondary" id="copy-btn" onclick="copyOutput()" disabled>Copiar resumo</button>
+    </div>
+    <div style="font-size:12px; color:#444;">Powered by Groq · Llama 3.3 70B</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let level = 'medium';
+  let fmt   = 'paragraph';
+
+  function setLevel(val, el) {
+    level = val;
+    el.closest('.seg-control').querySelectorAll('.seg-btn').forEach(b => b.classList.remove('on'));
+    el.classList.add('on');
+  }
+
+  function setFmt(val, el) {
+    fmt = val;
+    el.closest('.seg-control').querySelectorAll('.seg-btn').forEach(b => b.classList.remove('on'));
+    el.classList.add('on');
+  }
+
+  document.getElementById('input-text').addEventListener('input', function () {
+    const text  = this.value.trim();
+    const words = text ? text.split(/\s+/).length : 0;
+    document.getElementById('meta-in').textContent     = words + ' palavras';
+    document.getElementById('st-words-in').textContent = words.toLocaleString('pt-BR');
+    document.getElementById('st-chars-in').textContent = text.length.toLocaleString('pt-BR');
+    document.getElementById('main-btn').disabled       = words < 20;
+  });
+
+  async function summarize() {
+    const text = document.getElementById('input-text').value.trim();
+    if (!text) return;
+
+    const levelMap = {
+      light:  'Faça um resumo leve, mantendo cerca de 60–70% do conteúdo original, eliminando apenas repetições e detalhes irrelevantes.',
+      medium: 'Faça um resumo médio, mantendo cerca de 35–45% do conteúdo, preservando os pontos principais e a ideia central.',
+      heavy:  'Faça um resumo agressivo e muito conciso, com no máximo 20% do tamanho original, capturando apenas a essência.'
+    };
+
+    const fmtMap = {
+      paragraph: 'Responda em formato de parágrafos corridos.',
+      bullets:   'Responda em formato de tópicos com bullet points (use "• " no início de cada item).',
+      oneline:   'Responda em UMA única frase curta e direta, sem nenhum texto adicional.'
+    };
+
+    const prompt = `${levelMap[level]} ${fmtMap[fmt]}
+
+Responda APENAS com o resumo. Não inclua títulos, introdução ou explicação. Escreva em português.
+
+Texto:
+"""
+${text}
+"""`;
+
+    setLoading(true);
+
+    try {
+      const res  = await fetch('/api/summarize', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ prompt }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || data.error) throw new Error(data.error || 'Erro desconhecido');
+
+      showOutput(data.summary, text);
+    } catch (e) {
+      setLoading(false);
+      showToast('Erro: ' + e.message);
+    }
+  }
+
+  function showOutput(summary, original) {
+    setLoading(false);
+
+    const outWords = summary.split(/\s+/).length;
+    const inWords  = original.split(/\s+/).length;
+    const pct      = Math.round((1 - outWords / inWords) * 100);
+
+    document.getElementById('st-words-out').textContent = outWords.toLocaleString('pt-BR');
+    document.getElementById('st-reduction').textContent = pct > 0 ? pct + '%' : '—';
+    document.getElementById('meta-out').textContent     = outWords + ' palavras';
+    document.getElementById('out-dot').classList.add('active');
+    document.getElementById('copy-btn').disabled        = false;
+
+    const out = document.getElementById('output-text');
+    out.innerHTML = '';
+
+    let i = 0;
+    const tick = setInterval(() => {
+      out.textContent = summary.slice(0, i);
+      i += Math.ceil(summary.length / 180);
+      if (i >= summary.length) { out.textContent = summary; clearInterval(tick); }
+    }, summary.length > 600 ? 8 : 18);
+  }
+
+  function setLoading(on) {
+    const wrap = document.getElementById('loading-bar-wrap');
+    const btn  = document.getElementById('main-btn');
+    if (on) {
+      wrap.innerHTML  = '<div class="loading-bar"></div>';
+      btn.disabled    = true;
+      btn.textContent = '✦ Resumindo...';
+      document.getElementById('output-text').innerHTML =
+        '<div class="empty-state"><span class="empty-icon">✦</span><span>Gerando resumo...</span></div>';
+    } else {
+      wrap.innerHTML  = '<div style="height:3px;"></div>';
+      btn.disabled    = false;
+      btn.textContent = '✦ Resumir com IA';
+    }
+  }
+
+  function clearAll() {
+    document.getElementById('input-text').value = '';
+    document.getElementById('output-text').innerHTML =
+      '<div class="empty-state"><span class="empty-icon">✦</span><span>O resumo aparecerá aqui</span></div>';
+    ['st-words-in','st-words-out','st-chars-in'].forEach(id => document.getElementById(id).textContent = '0');
+    document.getElementById('st-reduction').textContent = '—';
+    document.getElementById('meta-in').textContent      = '0 palavras';
+    document.getElementById('meta-out').textContent     = '—';
+    document.getElementById('main-btn').disabled        = true;
+    document.getElementById('copy-btn').disabled        = true;
+    document.getElementById('out-dot').classList.remove('active');
+  }
+
+  function copyOutput() {
+    const txt = document.getElementById('output-text').textContent.trim();
+    if (txt) navigator.clipboard.writeText(txt).then(() => showToast('Resumo copiado!'));
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+</script>
+
+</body>
+</html>

@@ -5,6 +5,10 @@
   },
   "rewrites": [
     { "source": "/app/:name", "destination": "/Apps/:name/main.html" },
-    { "source": "/",          "destination": "/Apps/index.html" }
+    { "source": "/",          "destination": "/Apps/index.html" },
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/$1.html"
+    }
   ]
 }

@@ -1,13 +1,10 @@
 {
-  "cleanUrls": true,
+  "functions": {
+    "api/ai.js":        { "maxDuration": 60 },
+    "api/summarize.js": { "maxDuration": 60 }
+  },
   "rewrites": [
-    {
-      "source": "/app/:name",
-      "destination": "/Apps/:name/main.html"
-    },
-    {
-      "source": "/",
-      "destination": "/Apps/index.html"
-    }
+    { "source": "/app/:name", "destination": "/Apps/:name/main.html" },
+    { "source": "/",          "destination": "/Apps/index.html" }
   ]
 }

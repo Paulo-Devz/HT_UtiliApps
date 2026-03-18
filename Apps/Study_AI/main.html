@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudyAI — Aprenda com IA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="../../src/imgs/UTILI.png">
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <div class="logo-icon">🎓</div>
+      <span class="logo-text">Study<span>AI</span></span>
+    </div>
+    <h1>Aprenda qualquer matéria<br>com <em>inteligência artificial</em></h1>
+    <p>Digite sua dúvida, cole um resumo ou escreva o tema — a IA explica do jeito mais simples possível.</p>
+  </header>
+
+  <!-- Input card -->
+  <div class="card">
+    <div class="card-label">O que você quer aprender?</div>
+    <textarea id="input-text" placeholder="Ex: O que é fotossíntese? / Equação do 2º grau / Revolução Francesa..."></textarea>
+
+    <div class="chips" id="chips">
+      <span class="chip" onclick="setChip('Equação do 2º grau')">📐 Equação 2º grau</span>
+      <span class="chip" onclick="setChip('O que é fotossíntese?')">🌱 Fotossíntese</span>
+      <span class="chip" onclick="setChip('Revolução Francesa')">🏰 Rev. Francesa</span>
+      <span class="chip" onclick="setChip('Sistema solar e planetas')">🪐 Sistema Solar</span>
+      <span class="chip" onclick="setChip('Tipos de tecidos do corpo humano')">🧬 Tecidos humanos</span>
+      <span class="chip" onclick="setChip('Funções do 1º grau')">📊 Função 1º grau</span>
+    </div>
+
+    <div style="margin-top:22px;">
+      <div class="card-label">Como você quer a explicação?</div>
+      <div class="fmt-row">
+        <button class="fmt-btn active" data-fmt="resumo" onclick="setFmt('resumo',this)">
+          <span class="fmt-icon">⚡</span>
+          Resumo
+          <div class="fmt-desc">Rápido e direto</div>
+        </button>
+        <button class="fmt-btn" data-fmt="topicos" onclick="setFmt('topicos',this)">
+          <span class="fmt-icon">📋</span>
+          Tópicos
+          <div class="fmt-desc">Em lista organizada</div>
+        </button>
+        <button class="fmt-btn" data-fmt="artigo" onclick="setFmt('artigo',this)">
+          <span class="fmt-icon">📖</span>
+          Artigo
+          <div class="fmt-desc">Explicação completa</div>
+        </button>
+      </div>
+    </div>
+
+    <button class="gen-btn" id="gen-btn" onclick="generate()" disabled>
+      ✦ Gerar explicação
+    </button>
+  </div>
+
+  <!-- Output card -->
+  <div class="output-card" id="output-card">
+    <div id="loading-bar-wrap"></div>
+    <div class="output-header">
+      <div class="output-title">
+        <span class="output-dot" id="out-dot" style="display:none;"></span>
+        <span id="out-label">Explicação gerada</span>
+      </div>
+      <button class="copy-btn" id="copy-btn" onclick="copyOutput()">Copiar</button>
+    </div>
+    <div class="output-body" id="output-body">
+      <div class="output-empty">
+        <div class="output-empty-icon">✦</div>
+        A explicação aparecerá aqui
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+  let fmt = 'resumo';
+
+  function setFmt(val, el) {
+    fmt = val;
+    document.querySelectorAll('.fmt-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function setChip(text) {
+    document.getElementById('input-text').value = text;
+    document.getElementById('input-text').dispatchEvent(new Event('input'));
+  }
+
+  document.getElementById('input-text').addEventListener('input', function () {
+    document.getElementById('gen-btn').disabled = this.value.trim().length < 3;
+  });
+
+  async function generate() {
+    const text = document.getElementById('input-text').value.trim();
+    if (!text) return;
+
+    const fmtMap = {
+      resumo:  'Gere um RESUMO curto e claro (máximo 3 parágrafos).',
+      topicos: 'Organize a explicação em TÓPICOS com pontos importantes (use • para cada item, organize em seções se necessário).',
+      artigo:  'Gere um ARTIGO completo e detalhado, com seções bem organizadas (use ## para títulos de seção).'
+    };
+
+    const prompt = `Você é um professor incrível que explica de forma simples e didática para alunos iniciantes.
+
+Tema/Dúvida do aluno: "${text}"
+
+Formato solicitado: ${fmtMap[fmt]}
+
+REGRAS OBRIGATÓRIAS:
+- Explique como se fosse para um aluno do ensino médio/fundamental
+- Use linguagem simples, sem termos difíceis (ou explique quando usar)
+- Use exemplos práticos do dia a dia sempre que possível
+- Se for matemática: inclua as fórmulas relevantes e mostre pelo menos um exemplo resolvido passo a passo
+- NO FINAL, sempre inclua uma seção especial: "💡 MACETE:" com uma dica fácil de memorizar ou um atalho mental para lembrar do conteúdo. Se não houver um macete clássico, invente uma forma criativa de fixar o conteúdo.
+
+Responda em português brasileiro. Seja animado e encorajador, como um bom professor.`;
+
+    setLoading(true);
+
+    try {
+      const res  = await fetch('/api/ai', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ prompt, max_tokens: 1500 }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || data.error) throw new Error(data.error || 'Erro desconhecido');
+
+      renderOutput(data.result, text);
+    } catch (e) {
+      setLoading(false);
+      showToast('Erro: ' + e.message);
+    }
+  }
+
+  function renderOutput(raw, topic) {
+    setLoading(false);
+
+    const fmtLabels = { resumo: '⚡ Resumo', topicos: '📋 Tópicos', artigo: '📖 Artigo' };
+    document.getElementById('out-label').textContent = fmtLabels[fmt] + ' — ' + topic.slice(0, 40) + (topic.length > 40 ? '…' : '');
+    document.getElementById('out-dot').style.display = 'inline-block';
+
+    // Split macete from body
+    let bodyRaw = raw;
+    let maceteText = '';
+
+    const maceteMatch = raw.match(/💡\s*MACETE\s*:?([\s\S]+)$/i);
+    if (maceteMatch) {
+      bodyRaw   = raw.slice(0, maceteMatch.index).trim();
+      maceteText = maceteMatch[1].trim();
+    }
+
+    // Render body markdown-lite
+    let html = renderMarkdown(bodyRaw);
+
+    // Append macete
+    if (maceteText) {
+      html += `<div class="macete-block">
+        <div class="macete-icon">💡</div>
+        <div class="macete-content">
+          <div class="macete-label">Macete</div>
+          <div class="macete-text">${escHtml(maceteText)}</div>
+        </div>
+      </div>`;
+    }
+
+    const body = document.getElementById('output-body');
+    body.innerHTML = html;
+
+    document.getElementById('output-card').classList.add('visible');
+    document.getElementById('output-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function renderMarkdown(text) {
+    return text
+      // ## Títulos
+      .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+      // **negrito**
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      // `código`
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      // Fórmulas (linhas que contém = ou ^)
+      .replace(/^((?:[A-Za-zÀ-ú]+ ?= ?|[0-9x²³\+\-\*\/\(\)\^√]+).+)$/gm, (m) => {
+        if (m.includes('=') && m.length < 120) return `<div class="formula-block">${escHtml(m)}</div>`;
+        return m;
+      })
+      // Bullet points: • ou - ou *
+      .replace(/^[•\-\*] (.+)$/gm, '<li>$1</li>')
+      .replace(/(<li>.*<\/li>(\n|$))+/g, m => `<ul>${m}</ul>`)
+      // Numerados
+      .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
+      // Parágrafos
+      .split(/\n{2,}/)
+      .map(block => {
+        block = block.trim();
+        if (!block) return '';
+        if (block.startsWith('<h2>') || block.startsWith('<ul>') || block.startsWith('<li>') || block.startsWith('<div')) return block;
+        return `<p>${block.replace(/\n/g, '<br>')}</p>`;
+      })
+      .join('\n');
+  }
+
+  function escHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function setLoading(on) {
+    const wrap = document.getElementById('loading-bar-wrap');
+    const btn  = document.getElementById('gen-btn');
+    const card = document.getElementById('output-card');
+
+    if (on) {
+      wrap.innerHTML  = '<div class="loading-bar"></div>';
+      btn.disabled    = true;
+      btn.textContent = '✦ Gerando...';
+      card.classList.add('visible');
+      document.getElementById('output-body').innerHTML =
+        '<div class="output-empty"><div class="output-empty-icon" style="opacity:.6;animation:pulse 1s ease infinite">✦</div>A IA está pensando...</div>';
+      document.getElementById('out-dot').style.display = 'none';
+    } else {
+      wrap.innerHTML  = '';
+      btn.disabled    = false;
+      btn.textContent = '✦ Gerar explicação';
+    }
+  }
+
+  function copyOutput() {
+    const txt = document.getElementById('output-body').innerText.trim();
+    if (txt) navigator.clipboard.writeText(txt).then(() => showToast('Copiado!'));
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+</script>
+</body>
+</html>

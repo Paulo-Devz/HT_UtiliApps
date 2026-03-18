@@ -105,7 +105,7 @@
                 tipoPrograma: "EDITOR",
                 foto: "src/imgs/imgs++/tioPaulo.png",
                 descricao: "Editor de Foto Com Multifuncionalidades!",
-                fixado: true,
+                fixado: false,
                 link: "",
                 src: "Apps/Editor_Foto/main.html",
                 dataCriacao: "12/10/2025",
@@ -150,13 +150,25 @@
             {
                 dono: "PAULO",
                 nomePrograma: "Text Shortner",
-                tipoPrograma: "EDITOR",
+                tipoPrograma: "EDITOR AI",
                 foto: "src/imgs/imgs++/tioPaulo.png",
                 descricao: "Resuma qualquer tipo de texto, explicação e tópicos!",
                 fixado: true,
                 link: "",
                 src: "Apps/Text_Shortner/main.html",
                 dataCriacao: "16/03/2026",
+                videoIlustration: "https://youtu.be/w0L5oRzNQJk"
+            },
+            {
+                dono: "PAULO",
+                nomePrograma: "Study AI",
+                tipoPrograma: "STUDY AI",
+                foto: "src/imgs/imgs++/tioPaulo.png",
+                descricao: "Inteligencia artificial capaz de ajudar nos estudos!",
+                fixado: true,
+                link: "",
+                src: "Apps/Study_AI/main.html",
+                dataCriacao: "17/03/2026",
                 videoIlustration: "https://youtu.be/w0L5oRzNQJk"
             },
         ];

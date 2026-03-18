@@ -4,11 +4,8 @@
     "api/summarize.js": { "maxDuration": 60 }
   },
   "rewrites": [
-    { "source": "/app/:name", "destination": "/Apps/:name/main.html" },
-    { "source": "/",          "destination": "/Apps/index.html" },
-    {
-      "source": "/((?!api/).*)",
-      "destination": "/$1.html"
-    }
+    { "source": "/api/:path*", "destination": "/api/:path*" },
+    { "source": "/",           "destination": "/Apps/index.html" },
+    { "source": "/:name",      "destination": "/Apps/:name/main.html" }
   ]
 }

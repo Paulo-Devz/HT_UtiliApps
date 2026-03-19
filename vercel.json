@@ -1,11 +1,13 @@
 {
+  "cleanUrls": true,
   "functions": {
     "api/ai.js":        { "maxDuration": 60 },
-    "api/summarize.js": { "maxDuration": 60 }
+    "api/summarize.js": { "maxDuration": 60 },
+    "api/pexels.js":    { "maxDuration": 15 }
   },
   "rewrites": [
     { "source": "/api/:path*", "destination": "/api/:path*" },
-    { "source": "/",           "destination": "/Apps/index.html" },
+    { "source": "/",           "destination": "/index.html" },
     { "source": "/:name",      "destination": "/Apps/:name/main.html" }
   ]
 }

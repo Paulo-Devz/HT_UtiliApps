@@ -82,8 +82,8 @@
     .container {
       position: relative; z-index: 10;
       display: flex; flex-direction: column; align-items: center;
-      gap: 28px; padding: 100px 20px 40px;
-      max-width: 500px; width: 100%; text-align: center;
+      gap: 24px; padding: 100px 20px 40px;
+      width: 100%; max-width: 600px; text-align: center;
     }
 
     .destination-info { display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -96,31 +96,31 @@
       background: rgba(118,75,162,0.12);
     }
 
+    .ads-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+    }
+
+    .ad-label {
+      font-size: 10px; font-weight: 600; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(255,255,255,0.3);
+      align-self: flex-start;
+    }
+
     .ad-wrapper {
       background: rgba(255,255,255,0.04);
       backdrop-filter: blur(16px);
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 16px;
-      padding: 20px;
-      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      padding: 16px;
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
       box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      width: 100%;
+      overflow: hidden;
     }
-
-    .ad-label { font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.3); align-self: flex-start; }
-
-    /* Bloqueado */
-    .blocked-msg {
-      display: none;
-      flex-direction: column; align-items: center; gap: 14px;
-      background: rgba(255,255,255,0.04);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 16px;
-      padding: 28px 32px;
-    }
-
-    .blocked-msg p { font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.6; }
-    .blocked-timer { font-size: 28px; font-weight: 700; color: rgba(180,130,255,0.9); }
 
     .redirect-info { display: flex; flex-direction: column; align-items: center; gap: 10px; }
     .redirect-text { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.6; }
@@ -167,26 +167,29 @@
       <span class="destination-name" id="dest-label">...</span>
     </div>
 
-    <!-- Banner Adsterra -->
-    <div class="ad-wrapper" id="ad-wrapper">
+    <div class="ads-area">
       <span class="ad-label">Publicidade</span>
-      <script>
-        atOptions = {
-          'key' : '0ba151ad591a661133ccb031f37e242a',
-          'format' : 'iframe',
-          'height' : 250,
-          'width' : 300,
-          'params' : {}
-        };
-      </script>
-      <script async ="https://www.highperformanceformat.com/0ba151ad591a661133ccb031f37e242a/invoke.js"></script>
-    </div>
 
-    <!-- Mensagem de bloqueio (aparece quando está nos 5 min) -->
-    <div class="blocked-msg" id="blocked-msg">
-      <p>Você assistiu 2 propagandas.<br>Aguarde para continuar sem propaganda.</p>
-      <div class="blocked-timer" id="blocked-timer">5:00</div>
-      <p style="font-size:12px;color:rgba(255,255,255,0.35);">Indo direto ao app...</p>
+      <div class="ad-wrapper" id="ad-1">
+        <script>
+          atOptions = { 'key': '0ba151ad591a661133ccb031f37e242a', 'format': 'iframe', 'height': 250, 'width': 300, 'params': {} };
+        </script>
+        <script async src="https://www.highperformanceformat.com/0ba151ad591a661133ccb031f37e242a/invoke.js"></script>
+      </div>
+
+      <div class="ad-wrapper" id="ad-2">
+        <script>
+          atOptions = { 'key': '77177cf718ae65496aafeedb884b966c', 'format': 'iframe', 'height': 60, 'width': 468, 'params': {} };
+        </script>
+        <script async src="https://www.highperformanceformat.com/77177cf718ae65496aafeedb884b966c/invoke.js"></script>
+      </div>
+
+      <div class="ad-wrapper" id="ad-3">
+        <script>
+          atOptions = { 'key': '7fe76b6cbe654c49ca8477ec18775046', 'format': 'iframe', 'height': 300, 'width': 160, 'params': {} };
+        </script>
+        <script async src="https://www.highperformanceformat.com/7fe76b6cbe654c49ca8477ec18775046/invoke.js"></script>
+      </div>
     </div>
 
     <div class="redirect-info">
@@ -203,11 +206,7 @@
 
   </div>
 
-  <!-- Social Bar Adsterra -->
-  <script async ="https://pl28939392.profitablecpmratenetwork.com/ec/31/ab/ec31ab6c2dbac1ec07c1a44bf7e0127f.js"></script>
-
   <script>
-    // ── Estrelas ──
     for (let i = 0; i < 80; i++) {
       const s = document.createElement('div');
       s.className = 'star';
@@ -217,76 +216,57 @@
       document.body.appendChild(s);
     }
 
-    // ── Config ──
-    const MAX_ADS    = 2;
-    const BLOCK_TIME = 5 * 60 * 1000;
-    const CIRCUM     = 2 * Math.PI * 32;
+    const CIRCUM = 2 * Math.PI * 32;
 
-    // ── Destino ──
-    const destino = localStorage.getItem('propagandaDestino') || 0;
-    const destURL = destino ? './Apps/' + destino + '/main.html' : './';
+    const destino = localStorage.getItem('propagandaDestino') || '';
+    const destURL = destino
+      ? window.location.origin + '/Apps/' + destino + '/main.html'
+      : window.location.origin + '/';
 
     document.getElementById('dest-label').textContent =
-      destino ? String(destino).replace(/_/g, ' ') : 'HT UtiliApps';
-    document.getElementById('skip-btn').href = destURL;
+      destino ? destino.replace(/_/g, ' ') : 'HT UtiliApps';
 
-    // ── Verifica bloqueio ──
-    const count     = parseInt(localStorage.getItem('propagandasRodadas') || '0');
-    const blockedAt = parseInt(localStorage.getItem('propagandasBloqueadoEm') || '0');
-    const elapsed   = blockedAt ? Date.now() - blockedAt : BLOCK_TIME;
-    const blocked   = count >= MAX_ADS && elapsed < BLOCK_TIME;
-
-    if (blocked) {
-      // Esconde banner, mostra aviso
-      document.getElementById('ad-wrapper').style.display = 'none';
-      document.getElementById('blocked-msg').style.display = 'flex';
-
-      // Atualiza timer de bloqueio a cada segundo
-      const blockInterval = setInterval(() => {
-        const left = BLOCK_TIME - (Date.now() - blockedAt);
-        if (left <= 0) {
-          clearInterval(blockInterval);
-          localStorage.setItem('propagandasRodadas', '0');
-          localStorage.removeItem('propagandasBloqueadoEm');
-        }
-        const mins = Math.floor(Math.max(0, left) / 60000);
-        const secs = Math.floor((Math.max(0, left) % 60000) / 1000);
-        document.getElementById('blocked-timer').textContent =
-          mins + ':' + String(secs).padStart(2, '0');
-      }, 1000);
-    }
-
-    // ── Countdown 5s ──
     const ring  = document.getElementById('ring');
     const numEl = document.getElementById('countdown');
     ring.style.strokeDasharray  = CIRCUM;
     ring.style.strokeDashoffset = 0;
 
-    let remaining = 5;
+    let remaining  = 5;
+    let adCarregou = false;
 
-    // Se bloqueado ou sem banner, vai direto em 1.5s
-    if (blocked) {
-      setTimeout(() => { window.location.href = destURL; }, 1500);
-    } else {
-      // Verifica se banner carregou
-      setTimeout(() => {
-        const adIframe = document.querySelector('.ad-wrapper iframe');
-        if (!adIframe) {
-          window.location.href = destURL;
-        }
-      }, 1500);
-
-      const tick = setInterval(() => {
-        remaining--;
-        numEl.textContent = remaining;
-        ring.style.strokeDashoffset = CIRCUM * (1 - (remaining / 5));
-        if (remaining <= 0) {
-          clearInterval(tick);
-          localStorage.removeItem('propagandaDestino');
-          window.location.href = destURL;
-        }
-      }, 1000);
+    function irParaApp() {
+      localStorage.removeItem('propagandaDestino');
+      window.location.href = destURL;
     }
+
+    document.getElementById('skip-btn').onclick = (e) => {
+      e.preventDefault();
+      irParaApp();
+    };
+
+    const adCheck = setInterval(() => {
+      const temIframe = document.querySelector('.ad-wrapper iframe');
+      if (temIframe) {
+        adCarregou = true;
+        clearInterval(adCheck);
+      }
+    }, 300);
+
+    setTimeout(() => {
+      clearInterval(adCheck);
+      if (!adCarregou) irParaApp();
+    }, 1500);
+
+    const tick = setInterval(() => {
+      if (!adCarregou) return;
+      remaining--;
+      numEl.textContent = remaining;
+      ring.style.strokeDashoffset = CIRCUM * (1 - (remaining / 5));
+      if (remaining <= 0) {
+        clearInterval(tick);
+        irParaApp();
+      }
+    }, 1000);
   </script>
 
 </body>

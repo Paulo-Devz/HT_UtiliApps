@@ -1,5 +1,5 @@
 const MAX_ADS    = 2;
-const BLOCK_TIME = 10 * 60 * 1000; // muda pra 10 * 1000 pra testar
+const BLOCK_TIME = 5 * 60 * 1000;
 
 function isBlocked() {
     const count     = parseInt(localStorage.getItem('propagandasRodadas') || '0');
@@ -37,7 +37,6 @@ function abrirPrograma(src, link) {
         return;
     }
 
-    // Extrai só o nome da pasta: "Apps/Study_AI/main.html" → "Study_AI"
     const destino = src.replace(/.*Apps\//, '').replace('/main.html', '');
 
     if (isBlocked()) {
@@ -47,5 +46,5 @@ function abrirPrograma(src, link) {
 
     registrarPropaganda();
     localStorage.setItem('propagandaDestino', destino);
-    window.location.href = 'ads.html';
+    window.open('ads.html', '_blank');
 }

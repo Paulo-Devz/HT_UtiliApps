@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Caixa de Ferramentas</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="../../src/imgs/UTILI.png">
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Caixa de <span class="accent">Ferramentas</span></h1>
+      <p>Selecione uma ferramenta abaixo para começar</p>
+    </header>
+
+    <div class="tools-grid">
+      <div class="tool-card" data-tool="speed" onclick="openTool('speed', this)">
+        <span class="tool-icon">⚡</span>
+        <div class="tool-title">Teste de Velocidade</div>
+        <div class="tool-desc">Meça download, upload e ping da sua conexão.</div>
+        <span class="tool-badge">ABERTO</span>
+      </div>
+      <div class="tool-card" data-tool="ip" onclick="openTool('ip', this)">
+        <span class="tool-icon">🌐</span>
+        <div class="tool-title">Meu IP Público</div>
+        <div class="tool-desc">Descubra seu endereço IP e localização.</div>
+        <span class="tool-badge">ABERTO</span>
+      </div>
+      <div class="tool-card" data-tool="color" onclick="openTool('color', this)">
+        <span class="tool-icon">🎨</span>
+        <div class="tool-title">Gerador de Cores</div>
+        <div class="tool-desc">Gere cores aleatórias com HEX e RGB.</div>
+        <span class="tool-badge">ABERTO</span>
+      </div>
+      <div class="tool-card" data-tool="lorem" onclick="openTool('lorem', this)">
+        <span class="tool-icon">📄</span>
+        <div class="tool-title">Lorem Ipsum</div>
+        <div class="tool-desc">Gere texto de preenchimento em segundos.</div>
+        <span class="tool-badge">ABERTO</span>
+      </div>
+    </div>
+
+    <!-- Panel 1: Speed Test -->
+    <div class="panel" id="panel-speed">
+      <div class="panel-title">⚡ Teste de Velocidade</div>
+      <div class="speed-grid">
+        <div class="speed-card">
+          <div class="speed-label">Ping</div>
+          <div class="speed-value" id="sp-ping">—</div>
+          <div class="speed-unit">ms</div>
+        </div>
+        <div class="speed-card">
+          <div class="speed-label">Download</div>
+          <div class="speed-value" id="sp-down">—</div>
+          <div class="speed-unit">Mbps</div>
+        </div>
+        <div class="speed-card">
+          <div class="speed-label">Upload</div>
+          <div class="speed-value" id="sp-up">—</div>
+          <div class="speed-unit">Mbps</div>
+        </div>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="sp-progress"></div></div>
+      <div class="speed-status" id="sp-status">Clique em "Iniciar Teste" para começar.</div>
+      <button class="btn btn-primary" id="sp-btn" onclick="startSpeedTest()">Iniciar Teste</button>
+    </div>
+
+    <!-- Panel 2: IP -->
+    <div class="panel" id="panel-ip">
+      <div class="panel-title">🌐 Meu IP Público</div>
+      <div class="ip-box">
+        <div class="ip-address" id="ip-val">Carregando...</div>
+        <div class="ip-info-grid">
+          <div class="ip-info-item">
+            <div class="ip-info-label">Cidade</div>
+            <div class="ip-info-val" id="ip-city">—</div>
+          </div>
+          <div class="ip-info-item">
+            <div class="ip-info-label">País</div>
+            <div class="ip-info-val" id="ip-country">—</div>
+          </div>
+          <div class="ip-info-item">
+            <div class="ip-info-label">Região</div>
+            <div class="ip-info-val" id="ip-region">—</div>
+          </div>
+          <div class="ip-info-item">
+            <div class="ip-info-label">Provedor</div>
+            <div class="ip-info-val" id="ip-org">—</div>
+          </div>
+          <div class="ip-info-item">
+            <div class="ip-info-label">Fuso Horário</div>
+            <div class="ip-info-val" id="ip-tz">—</div>
+          </div>
+          <div class="ip-info-item">
+            <div class="ip-info-label">Versão</div>
+            <div class="ip-info-val" id="ip-ver">—</div>
+          </div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="loadIP()">Atualizar</button>
+        <button class="btn btn-secondary" onclick="copyText(document.getElementById('ip-val').textContent)">Copiar IP</button>
+      </div>
+    </div>
+
+    <!-- Panel 3: Color Generator -->
+    <div class="panel" id="panel-color">
+      <div class="panel-title">🎨 Gerador de Cores</div>
+      <div class="color-preview" id="color-preview"></div>
+      <div class="color-codes">
+        <div class="color-code-box" onclick="copyText(document.getElementById('hex-val').textContent)">
+          <div class="color-code-label">HEX</div>
+          <div class="color-code-val" id="hex-val">#667eea</div>
+          <span class="copy-hint">clique para copiar</span>
+        </div>
+        <div class="color-code-box" onclick="copyText(document.getElementById('rgb-val').textContent)">
+          <div class="color-code-label">RGB</div>
+          <div class="color-code-val" id="rgb-val">rgb(102, 126, 234)</div>
+          <span class="copy-hint">clique para copiar</span>
+        </div>
+      </div>
+      <div class="color-palette" id="color-palette"></div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="generateColor()">Gerar Cor</button>
+        <button class="btn btn-secondary" onclick="generatePalette()">Gerar Paleta</button>
+      </div>
+    </div>
+
+    <!-- Panel 4: Lorem Ipsum -->
+    <div class="panel" id="panel-lorem">
+      <div class="panel-title">📄 Gerador de Lorem Ipsum</div>
+      <div class="lorem-controls">
+        <label>Quantidade:</label>
+        <input type="number" id="lorem-qty" value="3" min="1" max="20" />
+        <select id="lorem-type">
+          <option value="paragraphs">Parágrafos</option>
+          <option value="sentences">Frases</option>
+          <option value="words">Palavras</option>
+        </select>
+        <button class="btn btn-primary" onclick="generateLorem()">Gerar</button>
+      </div>
+      <div class="lorem-output" id="lorem-output">Clique em "Gerar" para criar o texto.</div>
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="copyText(document.getElementById('lorem-output').textContent)">Copiar Texto</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ── Navigation ──
+    function openTool(id, card) {
+      document.querySelectorAll('.tool-card').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('visible'));
+      card.classList.add('active');
+      const panel = document.getElementById('panel-' + id);
+      panel.classList.add('visible');
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      if (id === 'ip' && document.getElementById('ip-val').textContent === 'Carregando...') loadIP();
+      if (id === 'color') { generateColor(); generatePalette(); }
+      if (id === 'lorem') generateLorem();
+    }
+
+    // ── Toast ──
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2000);
+    }
+
+    function copyText(txt) {
+      navigator.clipboard.writeText(txt).then(() => showToast('Copiado!'));
+    }
+
+    // ── 1. Speed Test ──
+    let testRunning = false;
+
+    async function measurePing() {
+      const times = [];
+      for (let i = 0; i < 5; i++) {
+        const t0 = performance.now();
+        await fetch('https://www.cloudflare.com/cdn-cgi/trace', { cache: 'no-store' });
+        times.push(performance.now() - t0);
+      }
+      return Math.round(Math.min(...times));
+    }
+
+    async function measureDownload() {
+      const url = 'https://speed.cloudflare.com/__down?bytes=10000000';
+      const t0 = performance.now();
+      const res = await fetch(url + '&r=' + Math.random(), { cache: 'no-store' });
+      const buf = await res.arrayBuffer();
+      const elapsed = (performance.now() - t0) / 1000;
+      return ((buf.byteLength * 8) / elapsed / 1e6).toFixed(1);
+    }
+
+    async function measureUpload() {
+      const size = 2 * 1024 * 1024;
+      const data = new Uint8Array(size);
+      const t0 = performance.now();
+      await fetch('https://speed.cloudflare.com/__up', {
+        method: 'POST',
+        body: data,
+        cache: 'no-store'
+      });
+      const elapsed = (performance.now() - t0) / 1000;
+      return ((size * 8) / elapsed / 1e6).toFixed(1);
+    }
+
+    async function startSpeedTest() {
+      if (testRunning) return;
+      testRunning = true;
+      const btn = document.getElementById('sp-btn');
+      btn.disabled = true;
+      btn.textContent = 'Testando...';
+      document.getElementById('sp-ping').textContent = '—';
+      document.getElementById('sp-down').textContent = '—';
+      document.getElementById('sp-up').textContent = '—';
+
+      setProgress(0, 'Medindo ping...');
+      try {
+        const ping = await measurePing();
+        document.getElementById('sp-ping').textContent = ping;
+        setProgress(33, 'Medindo download...');
+
+        const down = await measureDownload();
+        document.getElementById('sp-down').textContent = down;
+        setProgress(66, 'Medindo upload...');
+
+        const up = await measureUpload();
+        document.getElementById('sp-up').textContent = up;
+        setProgress(100, 'Teste concluído!');
+      } catch (e) {
+        setProgress(0, 'Erro ao testar. Verifique a conexão.');
+      }
+      btn.disabled = false;
+      btn.textContent = 'Testar Novamente';
+      testRunning = false;
+    }
+
+    function setProgress(pct, msg) {
+      document.getElementById('sp-progress').style.width = pct + '%';
+      document.getElementById('sp-status').textContent = msg;
+    }
+
+    // ── 2. IP ──
+    async function loadIP() {
+      document.getElementById('ip-val').textContent = 'Carregando...';
+      try {
+        const res  = await fetch('https://ipapi.co/json/');
+        const data = await res.json();
+        document.getElementById('ip-val').textContent     = data.ip;
+        document.getElementById('ip-city').textContent    = data.city || '—';
+        document.getElementById('ip-country').textContent = data.country_name || '—';
+        document.getElementById('ip-region').textContent  = data.region || '—';
+        document.getElementById('ip-org').textContent     = (data.org || '—').substring(0, 24);
+        document.getElementById('ip-tz').textContent      = data.timezone || '—';
+        document.getElementById('ip-ver').textContent     = data.version || 'IPv4';
+      } catch {
+        document.getElementById('ip-val').textContent = 'Erro ao carregar';
+      }
+    }
+
+    // ── 3. Color Generator ──
+    function randomHex() {
+      return '#' + Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0');
+    }
+
+    function hexToRgb(hex) {
+      const r = parseInt(hex.slice(1,3),16);
+      const g = parseInt(hex.slice(3,5),16);
+      const b = parseInt(hex.slice(5,7),16);
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    function applyColor(hex) {
+      document.getElementById('color-preview').style.backgroundColor = hex;
+      document.getElementById('hex-val').textContent = hex.toUpperCase();
+      document.getElementById('rgb-val').textContent = hexToRgb(hex);
+    }
+
+    function generateColor() {
+      applyColor(randomHex());
+    }
+
+    function generatePalette() {
+      const palette = document.getElementById('color-palette');
+      palette.innerHTML = '';
+      for (let i = 0; i < 10; i++) {
+        const hex = randomHex();
+        const sw = document.createElement('div');
+        sw.className = 'palette-swatch';
+        sw.style.background = hex;
+        sw.title = hex;
+        sw.onclick = () => applyColor(hex);
+        palette.appendChild(sw);
+      }
+    }
+
+    // ── 4. Lorem Ipsum ──
+    const LOREM_WORDS = `lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum`.split(' ');
+
+    function loremWords(n) {
+      const out = [];
+      for (let i = 0; i < n; i++) out.push(LOREM_WORDS[i % LOREM_WORDS.length]);
+      return out.join(' ');
+    }
+
+    function loremSentence() {
+      const len = 8 + Math.floor(Math.random() * 10);
+      const words = [];
+      for (let i = 0; i < len; i++) words.push(LOREM_WORDS[Math.floor(Math.random() * LOREM_WORDS.length)]);
+      const s = words.join(' ');
+      return s.charAt(0).toUpperCase() + s.slice(1) + '.';
+    }
+
+    function loremParagraph() {
+      const count = 4 + Math.floor(Math.random() * 4);
+      return Array.from({ length: count }, loremSentence).join(' ');
+    }
+
+    function generateLorem() {
+      const qty  = Math.max(1, Math.min(20, parseInt(document.getElementById('lorem-qty').value) || 3));
+      const type = document.getElementById('lorem-type').value;
+      let out = '';
+      if (type === 'words')      out = loremWords(qty);
+      else if (type === 'sentences') out = Array.from({ length: qty }, loremSentence).join(' ');
+      else out = Array.from({ length: qty }, loremParagraph).join('\n\n');
+      document.getElementById('lorem-output').textContent = out;
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Financeira</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="../../src/imgs/UTILI.png">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💰 Calculadora Financeira</h1>
+            <p class="subtitle">Juros, Parcelamentos e Investimentos</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="juros-simples">Juros Simples</button>
+            <button class="tab-btn" data-tab="juros-compostos">Juros Compostos</button>
+            <button class="tab-btn" data-tab="parcelamento">Parcelamento</button>
+            <button class="tab-btn" data-tab="investimento">Investimento</button>
+        </div>
+
+        <div class="main-card">
+            <!-- Juros Simples -->
+            <div class="tab-content active" id="juros-simples">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Capital Inicial (R$)</label>
+                        <input type="number" id="js-capital" placeholder="Ex: 1000" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Taxa de Juros (% ao mês)</label>
+                        <input type="number" id="js-taxa" placeholder="Ex: 2" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Período (meses)</label>
+                        <input type="number" id="js-tempo" placeholder="Ex: 12">
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-calculate" onclick="calcularJurosSimples()">Calcular</button>
+                    <button class="btn btn-reset" onclick="resetarJurosSimples()">Limpar</button>
+                </div>
+                <div class="results" id="js-results"></div>
+            </div>
+
+            <!-- Juros Compostos -->
+            <div class="tab-content" id="juros-compostos">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Capital Inicial (R$)</label>
+                        <input type="number" id="jc-capital" placeholder="Ex: 1000" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Taxa de Juros (% ao mês)</label>
+                        <input type="number" id="jc-taxa" placeholder="Ex: 1" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Período (meses)</label>
+                        <input type="number" id="jc-tempo" placeholder="Ex: 12">
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-calculate" onclick="calcularJurosCompostos()">Calcular</button>
+                    <button class="btn btn-reset" onclick="resetarJurosCompostos()">Limpar</button>
+                </div>
+                <div class="results" id="jc-results"></div>
+            </div>
+
+            <!-- Parcelamento -->
+            <div class="tab-content" id="parcelamento">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Valor Total (R$)</label>
+                        <input type="number" id="parc-valor" placeholder="Ex: 5000" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Taxa de Juros (% ao mês)</label>
+                        <input type="number" id="parc-taxa" placeholder="Ex: 2" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Número de Parcelas</label>
+                        <input type="number" id="parc-parcelas" placeholder="Ex: 12">
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-calculate" onclick="calcularParcelamento()">Calcular</button>
+                    <button class="btn btn-reset" onclick="resetarParcelamento()">Limpar</button>
+                </div>
+                <div class="results" id="parc-results"></div>
+            </div>
+
+            <!-- Investimento -->
+            <div class="tab-content" id="investimento">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Capital Inicial (R$)</label>
+                        <input type="number" id="inv-capital" placeholder="Ex: 1000" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Aporte Mensal (R$)</label>
+                        <input type="number" id="inv-aporte" placeholder="Ex: 200" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Taxa de Juros (% ao mês)</label>
+                        <input type="number" id="inv-taxa" placeholder="Ex: 0.5" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Período (meses)</label>
+                        <input type="number" id="inv-tempo" placeholder="Ex: 24">
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-calculate" onclick="calcularInvestimento()">Calcular</button>
+                    <button class="btn btn-reset" onclick="resetarInvestimento()">Limpar</button>
+                </div>
+                <div class="results" id="inv-results"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

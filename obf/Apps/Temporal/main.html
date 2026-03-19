@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Widget de Previsão do Tempo</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="../../src/imgs/UTILI.png">
+</head>
+<body>
+
+  <div class="weather-widget">
+    <div class="ww-search">
+      <input type="text" id="cityInput" placeholder="Digite uma cidade..." />
+      <button class="ww-geo-btn" id="geoBtn" title="Usar minha localização">⌖</button>
+      <button class="ww-search-btn" id="searchBtn">Buscar</button>
+    </div>
+    <div id="ww-content">
+      <div class="ww-loading">Detectando sua localização...</div>
+    </div>
+  </div>
+
+  <script>
+    function weatherIcon(code, isDay) {
+      if (code === 0)  return isDay ? '☀️' : '🌙';
+      if (code <= 2)   return isDay ? '⛅' : '🌙';
+      if (code === 3)  return '☁️';
+      if (code <= 48)  return '🌫️';
+      if (code <= 57)  return '🌦️';
+      if (code <= 67)  return '🌧️';
+      if (code <= 77)  return '❄️';
+      if (code <= 82)  return '🌧️';
+      if (code <= 86)  return '❄️';
+      return '⛈️';
+    }
+
+    function feelLabel(temp) {
+      if (temp >= 30) return ['Está quente!', 'feel-hot'];
+      if (temp <= 16) return ['Está frio!', 'feel-cold'];
+      return ['Temperatura agradável', 'feel-nice'];
+    }
+
+    async function getCoords(city) {
+      const res = await fetch(
+        `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=pt&format=json`
+      );
+      const data = await res.json();
+      if (!data.results?.length) throw new Error('Cidade não encontrada');
+      return data.results[0];
+    }
+
+    async function getWeather(lat, lon, name, country) {
+      const url = `https://api.open-meteo.com/v1/forecast` +
+        `?latitude=${lat}&longitude=${lon}` +
+        `&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code,is_day,apparent_temperature` +
+        `&hourly=temperature_2m,weather_code` +
+        `&timezone=auto&forecast_days=1`;
+
+      const res  = await fetch(url);
+      const data = await res.json();
+      renderWeather(data, name, country);
+    }
+
+    function renderWeather(d, name, country) {
+      const cur      = d.current;
+      const temp     = Math.round(cur.temperature_2m);
+      const feelsLike = Math.round(cur.apparent_temperature);
+      const humidity = Math.round(cur.relative_humidity_2m);
+      const wind     = Math.round(cur.wind_speed_10m);
+      const icon     = weatherIcon(cur.weather_code, cur.is_day);
+      const [feelText, feelClass] = feelLabel(temp);
+      const nowHour  = new Date().getHours();
+
+      const hourlyHTML = d.hourly.time.slice(0, 24).map((t, i) => {
+        const h    = new Date(t).getHours();
+        const isNow = h === nowHour;
+        const hTemp = Math.round(d.hourly.temperature_2m[i]);
+        const hIcon = weatherIcon(d.hourly.weather_code[i], h >= 6 && h < 19);
+        return `
+          <div class="ww-hour${isNow ? ' now' : ''}">
+            <div class="ww-hour-time">${isNow ? 'Agora' : h.toString().padStart(2,'0') + 'h'}</div>
+            <div class="ww-hour-icon">${hIcon}</div>
+            <div class="ww-hour-temp">${hTemp}°</div>
+          </div>`;
+      }).join('');
+
+      document.getElementById('ww-content').innerHTML = `
+        <div class="ww-main">
+          <div>
+            <div class="ww-city-name">${name}</div>
+            <div class="ww-country">${country}</div>
+            <div class="ww-temp-big">${temp}°C</div>
+            <span class="ww-feel ${feelClass}">${feelText}</span>
+          </div>
+          <div class="ww-icon-big">${icon}</div>
+        </div>
+
+        <div class="ww-details">
+          <div class="ww-detail">
+            <div class="ww-detail-label">Sensação</div>
+            <div class="ww-detail-val">${feelsLike}°C</div>
+          </div>
+          <div class="ww-detail">
+            <div class="ww-detail-label">Umidade</div>
+            <div class="ww-detail-val">${humidity}%</div>
+          </div>
+          <div class="ww-detail">
+            <div class="ww-detail-label">Vento</div>
+            <div class="ww-detail-val">${wind} km/h</div>
+          </div>
+        </div>
+
+        <div class="ww-section-title">Previsão por hora</div>
+        <div class="ww-hourly">${hourlyHTML}</div>
+      `;
+    }
+
+    async function searchCity(city) {
+      document.getElementById('ww-content').innerHTML =
+        '<div class="ww-loading">Buscando...</div>';
+      try {
+        const loc = await getCoords(city);
+        await getWeather(loc.latitude, loc.longitude, loc.name, loc.country ?? '');
+      } catch (e) {
+        document.getElementById('ww-content').innerHTML =
+          '<div class="ww-error">Cidade não encontrada. Tente novamente.</div>';
+      }
+    }
+
+    async function useGeolocation() {
+      document.getElementById('ww-content').innerHTML =
+        '<div class="ww-loading">Obtendo localização...</div>';
+      navigator.geolocation.getCurrentPosition(
+        async pos => {
+          try {
+            const { latitude: lat, longitude: lon } = pos.coords;
+            const geo = await fetch(
+              `https://geocoding-api.open-meteo.com/v1/reverse?latitude=${lat}&longitude=${lon}&language=pt`
+            );
+            const gd   = await geo.json();
+            const name = gd.results?.[0]?.name ?? 'Sua localização';
+            const country = gd.results?.[0]?.country ?? '';
+            await getWeather(lat, lon, name, country);
+          } catch {
+            searchCity('São Paulo');
+          }
+        },
+        () => searchCity('São Paulo')
+      );
+    }
+
+    document.getElementById('searchBtn').addEventListener('click', () => {
+      const v = document.getElementById('cityInput').value.trim();
+      if (v) searchCity(v);
+    });
+
+    document.getElementById('cityInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        const v = e.target.value.trim();
+        if (v) searchCity(v);
+      }
+    });
+
+    document.getElementById('geoBtn').addEventListener('click', useGeolocation);
+
+    useGeolocation();
+  </script>
+
+</body>
+</html>

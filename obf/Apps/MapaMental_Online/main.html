@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Mental Online</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="../../src/imgs/UTILI.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+</head>
+<body>
+    <div class="toolbar">
+        <div class="logo">🧠 Mapa Mental</div>
+        <button class="btn-tool" id="btnAddNode">➕ Adicionar Ideia</button>
+        <button class="btn-tool" id="btnConnect">🔗 Conectar Ideias</button>
+        <input type="color" id="colorPicker" class="color-picker" value="#667eea" title="Cor do nó">
+        <button class="btn-tool btn-save" id="btnSave">💾 Salvar</button>
+        <button class="btn-tool btn-save" id="btnExport">📤 Exportar</button>
+        <button class="btn-tool btn-save" id="btnLoad">📂 Carregar</button>
+        <button class="btn-tool btn-secondary" id="btnClear">🗑️ Limpar Tudo</button>
+    </div>
+
+    <svg id="svgConnections" style="position: absolute; top: 70px; left: 0; width: 100%; height: calc(100% - 70px); pointer-events: none; z-index: 5;">
+    </svg>
+
+    <div id="canvas"></div>
+
+    <div class="instructions">
+        <strong>Instruções:</strong> Clique em "Adicionar Ideia" para criar nós • Arraste os nós para posicioná-los • 
+        Clique em "Conectar Ideias" e depois em 2 nós para ligá-los • Passe o mouse sobre um nó para deletá-lo
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

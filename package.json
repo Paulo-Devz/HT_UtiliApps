@@ -2,7 +2,7 @@
   "name": "ht-utiliapps",
   "version": "1.0.0",
   "private": true,
-  "dependencies": {
+  "devDependencies": {
     "javascript-obfuscator": "^5.3.0"
   }
 }

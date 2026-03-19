@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de QR Code</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="../../src/imgs/UTILI.png">
+</head>
+<body>
+    <button class="dark-mode-toggle" style="display: none;" id="darkModeToggle">🌙</button>
+
+    <div class="container">
+        <div class="header">
+            <h1>📱 Gerador de QR Code</h1>
+            <p class="subtitle">Crie QR Codes personalizados instantaneamente</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="text">Texto/URL</button>
+            <button class="tab-btn" data-tab="wifi">Wi-Fi</button>
+            <button class="tab-btn" data-tab="contact">Contato</button>
+        </div>
+
+        <!-- Tab: Texto/URL -->
+        <div class="tab-content active" id="text">
+            <div class="form-group">
+                <label>Texto ou URL:</label>
+                <textarea id="textInput" placeholder="Digite um texto ou cole um link..."></textarea>
+            </div>
+        </div>
+
+        <!-- Tab: Wi-Fi -->
+        <div class="tab-content" id="wifi">
+            <div class="form-group">
+                <label>Nome da Rede (SSID):</label>
+                <input type="text" id="wifiSSID" placeholder="MinhaRede">
+            </div>
+            <div class="form-group">
+                <label>Senha:</label>
+                <input type="text" id="wifiPassword" placeholder="senha123">
+            </div>
+            <div class="form-group">
+                <label>Tipo de Segurança:</label>
+                <select id="wifiSecurity">
+                    <option value="WPA">WPA/WPA2</option>
+                    <option value="WEP">WEP</option>
+                    <option value="nopass">Sem senha</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Tab: Contato -->
+        <div class="tab-content" id="contact">
+            <div class="form-group">
+                <label>Nome:</label>
+                <input type="text" id="contactName" placeholder="João Silva">
+            </div>
+            <div class="form-group">
+                <label>Telefone:</label>
+                <input type="text" id="contactPhone" placeholder="+55 11 99999-9999">
+            </div>
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="text" id="contactEmail" placeholder="joao@email.com">
+            </div>
+        </div>
+
+        <!-- Opções de Personalização -->
+        <div class="options-grid">
+            <div class="form-group">
+                <label>Tamanho:</label>
+                <select id="qrSize">
+                    <option value="128">Pequeno (128px)</option>
+                    <option value="256" selected>Médio (256px)</option>
+                    <option value="512">Grande (512px)</option>
+                    <option value="1024">Extra Grande (1024px)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Cor:</label>
+                <div class="color-input-wrapper">
+                    <input type="color" id="qrColor" value="#000000">
+                    <span id="colorValue">#000000</span>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-generate" id="generateBtn">🔄 Gerar QR Code</button>
+
+        <div class="qr-preview" id="qrPreview">
+            <div id="qrcode"></div>
+            <div class="download-buttons">
+                <button class="btn-download" id="downloadBasic">📥 Baixar (Básico)</button>
+                <button class="btn-download premium" id="downloadHD">⭐ Baixar HD (Assista 5s)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Anúncio -->
+    <div class="ad-modal" id="adModal">
+        <div class="ad-content">
+            <h2>📺 Aguarde o anúncio</h2>
+            <div class="ad-timer" id="adTimer">5</div>
+            <p class="ad-message">Seu download HD começará em breve...</p>
+            <button class="btn-close-ad" id="closeAdBtn">✅ Baixar Agora</button>
+        </div>
+    </div>
+
+    <script>
+        var darkModeToggle = document.getElementById('darkModeToggle');
+        var body = document.body;
+        var tabBtns = document.querySelectorAll('.tab-btn');
+        var tabContents = document.querySelectorAll('.tab-content');
+        var generateBtn = document.getElementById('generateBtn');
+        var qrPreview = document.getElementById('qrPreview');
+        var qrCodeDiv = document.getElementById('qrcode');
+        var qrColor = document.getElementById('qrColor');
+        var colorValue = document.getElementById('colorValue');
+        var downloadBasic = document.getElementById('downloadBasic');
+        var downloadHD = document.getElementById('downloadHD');
+        var adModal = document.getElementById('adModal');
+        var adTimer = document.getElementById('adTimer');
+        var closeAdBtn = document.getElementById('closeAdBtn');
+        var currentQRCode = null;
+
+        body.classList.toggle('dark-mode');
+        darkModeToggle.addEventListener('click', function() {
+            darkModeToggle.textContent = body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        });
+
+        tabBtns.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var tab = btn.getAttribute('data-tab');
+                
+                tabBtns.forEach(function(b) {
+                    b.classList.remove('active');
+                });
+                tabContents.forEach(function(c) {
+                    c.classList.remove('active');
+                });
+                
+                btn.classList.add('active');
+                document.getElementById(tab).classList.add('active');
+            });
+        });
+
+        qrColor.addEventListener('input', function() {
+            colorValue.textContent = qrColor.value;
+        });
+
+        generateBtn.addEventListener('click', function() {
+            var activeTab = document.querySelector('.tab-btn.active').getAttribute('data-tab');
+            var qrData = '';
+
+            if (activeTab === 'text') {
+                qrData = document.getElementById('textInput').value.trim();
+            } else if (activeTab === 'wifi') {
+                var ssid = document.getElementById('wifiSSID').value;
+                var password = document.getElementById('wifiPassword').value;
+                var security = document.getElementById('wifiSecurity').value;
+                qrData = 'WIFI:T:' + security + ';S:' + ssid + ';P:' + password + ';;';
+            } else if (activeTab === 'contact') {
+                var name = document.getElementById('contactName').value;
+                var phone = document.getElementById('contactPhone').value;
+                var email = document.getElementById('contactEmail').value;
+                qrData = 'BEGIN:VCARD\nVERSION:3.0\nFN:' + name + '\nTEL:' + phone + '\nEMAIL:' + email + '\nEND:VCARD';
+            }
+
+            if (!qrData) {
+                alert('Preencha os campos obrigatórios!');
+                return;
+            }
+
+            qrCodeDiv.innerHTML = '';
+            
+            var size = parseInt(document.getElementById('qrSize').value);
+            var color = qrColor.value;
+
+            currentQRCode = new QRCode(qrCodeDiv, {
+                text: qrData,
+                width: size,
+                height: size,
+                colorDark: color,
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            qrPreview.classList.add('show');
+        });
+
+        downloadBasic.addEventListener('click', function() {
+            downloadQRCode('qrcode-basic.png');
+        });
+
+        downloadHD.addEventListener('click', function() {
+            adModal.classList.add('show');
+            closeAdBtn.classList.remove('show');
+            
+            var timeLeft = 5;
+            adTimer.textContent = timeLeft;
+            
+            var countdown = setInterval(function() {
+                timeLeft--;
+                adTimer.textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    closeAdBtn.classList.add('show');
+                }
+            }, 1000);
+        });
+
+        closeAdBtn.addEventListener('click', function() {
+            adModal.classList.remove('show');
+            downloadQRCode('qrcode-hd.png');
+        });
+
+        function downloadQRCode(filename) {
+            var canvas = qrCodeDiv.querySelector('canvas');
+            if (canvas) {
+                var link = document.createElement('a');
+                link.download = filename;
+                link.href = canvas.toDataURL();
+                link.click();
+            }
+        }
+    </script>
+</body>
+</html>

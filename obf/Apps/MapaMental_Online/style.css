@@ -1,0 +1,205 @@
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            background: #f5f5f5;
+        }
+
+        .toolbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            z-index: 1000;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: #667eea;
+            margin-right: 20px;
+        }
+
+        .btn-tool {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-tool:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f44336;
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.4);
+        }
+
+        .btn-save {
+            background: #4CAF50;
+        }
+
+        .btn-save:hover {
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .color-picker {
+            padding: 5px 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #canvas {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            cursor: grab;
+        }
+
+        #canvas.grabbing {
+            cursor: grabbing;
+        }
+
+        .node {
+            position: absolute;
+            min-width: 120px;
+            padding: 15px 20px;
+            background: #667eea;
+            color: white;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            cursor: move;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+            z-index: 10;
+            word-wrap: break-word;
+            max-width: 250px;
+        }
+
+        .node:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .node.selected {
+            box-shadow: 0 0 0 3px #FFD700;
+        }
+
+        .node-input {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            width: 100%;
+            outline: none;
+        }
+
+        .node-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 25px;
+            height: 25px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .node:hover .delete-btn {
+            display: flex;
+        }
+
+        .connection {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .connection-line {
+            stroke: #999;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .instructions {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 15px 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            font-size: 13px;
+            color: #666;
+            z-index: 1000;
+            text-align: center;
+        }
+
+        .instructions strong {
+            color: #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .toolbar {
+                padding: 10px;
+                gap: 8px;
+            }
+
+            .logo {
+                font-size: 18px;
+                margin-right: 10px;
+            }
+
+            .btn-tool {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+
+            .instructions {
+                font-size: 11px;
+                padding: 10px 15px;
+            }
+        }

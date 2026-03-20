@@ -1,19 +1,3 @@
-// ============================================================
-//  obfuscate.js — Raiz do projeto
-//  npm install javascript-obfuscator --save-dev
-//  node obfuscate.js
-//
-//  FONTE DA VERDADE: /obf/Apps/  (originais limpos — EDITE AQUI)
-//  SAÍDA:            /Apps/      (obfuscado — Vercel serve daqui)
-//
-//  Pode rodar quantas vezes quiser — sempre lê /obf/, nunca
-//  obfusca o que já está obfuscado.
-//
-//  PRIMEIRA VEZ só:
-//    Se /obf/Apps/ ainda não existir, copia /Apps/ pra lá
-//    como ponto de partida (bootstrap).
-// ============================================================
-
 const fs   = require('fs');
 const path = require('path');
 const JavaScriptObfuscator = require('javascript-obfuscator');
@@ -49,9 +33,9 @@ const OBF_OPTIONS = {
   unicodeEscapeSequence:               false,
 };
 
-const ROOT    = __dirname;
-const ORIGIN  = path.join(ROOT, 'obf', 'Apps'); // originais limpos
-const DEST    = path.join(ROOT, 'Apps');         // obfuscados pro Vercel
+const ROOT = __dirname;
+const APPS = path.join(ROOT, 'Apps');
+const OBF  = path.join(ROOT, 'obf', 'Apps');
 
 function ensureDir(d) {
   if (!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true });
@@ -62,116 +46,118 @@ function copyDir(src, dst) {
   for (const entry of fs.readdirSync(src)) {
     const s = path.join(src, entry);
     const d = path.join(dst, entry);
-    if (fs.statSync(s).isDirectory()) copyDir(s, d);
-    else fs.copyFileSync(s, d);
+    fs.statSync(s).isDirectory() ? copyDir(s, d) : fs.copyFileSync(s, d);
   }
 }
 
-function obfCode(code) {
-  return JavaScriptObfuscator.obfuscate(code, OBF_OPTIONS).getObfuscatedCode();
+function isObfuscated(code) {
+  const signals = [
+    /\bvar\s+_0x[a-f0-9]{4,}\b/,
+    /\b_0x[a-f0-9]{4,}\s*\(/,
+    /\['\\x[0-9a-f]{2}/,
+    /String\[.fromCharCode.\]/,
+    /\+!\[\]\+!\[\]/,
+  ];
+  const matches = signals.filter(r => r.test(code)).length;
+  return matches >= 2;
 }
 
-// ── Bootstrap: primeira vez, copia /Apps → /obf/Apps ──
-if (!fs.existsSync(ORIGIN)) {
-  if (!fs.existsSync(DEST)) {
-    console.error('❌ Nem /Apps/ nem /obf/Apps/ encontrados.');
-    process.exit(1);
-  }
-  console.log('🆕 Primeira execução: copiando /Apps/ → /obf/Apps/ como ponto de partida...');
-  copyDir(DEST, ORIGIN);
-  console.log('✅ /obf/Apps/ criado com seus originais.\n');
-  console.log('⚠️  A partir de agora, EDITE sempre em /obf/Apps/ e rode node obfuscate.js\n');
-}
+function extractJS(appDir) {
+  const scriptPath = path.join(appDir, 'script.js');
+  const htmlPath   = path.join(appDir, 'main.html');
 
-// ── Lê os apps de /obf/Apps/ (originais) ──
-const apps = fs.readdirSync(ORIGIN).filter(n =>
-  fs.statSync(path.join(ORIGIN, n)).isDirectory()
-);
-
-console.log(`🔍 ${apps.length} app(s) encontrados em /obf/Apps/\n`);
-
-let ok = 0, skip = 0;
-
-for (const app of apps) {
-  const srcApp  = path.join(ORIGIN, app); // original limpo
-  const dstApp  = path.join(DEST,   app); // onde escreve obfuscado
-  ensureDir(dstApp);
-
-  const scriptSrc = path.join(srcApp, 'script.js');
-  const htmlSrc   = path.join(srcApp, 'main.html');
-  const scriptDst = path.join(dstApp, 'script.js');
-  const htmlDst   = path.join(dstApp, 'main.html');
-
-  // Copia todos assets não-JS (css, imgs, etc.)
-  for (const entry of fs.readdirSync(srcApp)) {
-    const s = path.join(srcApp, entry);
-    const d = path.join(dstApp, entry);
-    if (fs.statSync(s).isDirectory()) copyDir(s, d);
-    else if (path.extname(entry).toLowerCase() !== '.js') fs.copyFileSync(s, d);
+  if (fs.existsSync(scriptPath)) {
+    return { type: 'file', code: fs.readFileSync(scriptPath, 'utf8'), scriptPath, htmlPath };
   }
 
-  // ── CASO 1: tem script.js ──
-  if (fs.existsSync(scriptSrc)) {
-    const code = fs.readFileSync(scriptSrc, 'utf8');
-    try {
-      fs.writeFileSync(scriptDst, obfCode(code));
-      if (fs.existsSync(htmlSrc)) fs.copyFileSync(htmlSrc, htmlDst);
-      console.log(`✅ [script.js]  ${app}`);
-      ok++;
-    } catch(e) {
-      console.error(`❌ ${app}: ${e.message.slice(0, 80)}`);
-      skip++;
-    }
-    continue;
-  }
-
-  // ── CASO 2: sem script.js, extrai inline do HTML ──
-  if (fs.existsSync(htmlSrc)) {
-    const html = fs.readFileSync(htmlSrc, 'utf8');
-
+  if (fs.existsSync(htmlPath)) {
+    const html = fs.readFileSync(htmlPath, 'utf8');
     const matches = [...html.matchAll(/<script(?![^>]*\bsrc\b)[^>]*>([\s\S]*?)<\/script>/gi)]
       .map(m => ({ full: m[0], code: m[1].trim() }))
       .filter(m => m.code.length > 100)
       .sort((a, b) => b.code.length - a.code.length);
 
-    if (!matches.length) {
-      fs.copyFileSync(htmlSrc, htmlDst);
-      console.warn(`⚠️  ${app} — sem script inline, copiado sem alterar`);
-      skip++;
-      continue;
+    if (matches.length) {
+      return { type: 'inline', code: matches[0].code, allMatches: matches, htmlPath, scriptPath };
     }
+  }
 
+  return null;
+}
+
+function writeObfuscated(appDir, extracted) {
+  const obfed = JavaScriptObfuscator.obfuscate(extracted.code, OBF_OPTIONS).getObfuscatedCode();
+
+  if (extracted.type === 'file') {
+    fs.writeFileSync(extracted.scriptPath, obfed);
+    return;
+  }
+
+  let html = fs.readFileSync(extracted.htmlPath, 'utf8');
+  html = html.replace(extracted.allMatches[0].full, `<script>${obfed}</script>`);
+
+  for (let i = 1; i < extracted.allMatches.length; i++) {
     try {
-      let newHtml = html;
-      const main  = matches[0];
+      const obfSmall = JavaScriptObfuscator.obfuscate(extracted.allMatches[i].code, OBF_OPTIONS).getObfuscatedCode();
+      html = html.replace(extracted.allMatches[i].full, `<script>${obfSmall}</script>`);
+    } catch(_) {}
+  }
 
-      // Maior script → script.js obfuscado separado
-      fs.writeFileSync(scriptDst, obfCode(main.code));
-      newHtml = newHtml.replace(main.full, `<script src="script.js"></script>`);
+  fs.writeFileSync(extracted.htmlPath, html);
+}
 
-      // Scripts menores → obfusca inline
-      for (let i = 1; i < matches.length; i++) {
-        try { newHtml = newHtml.replace(matches[i].full, `<script>${obfCode(matches[i].code)}</script>`); }
-        catch(_) {}
-      }
+ensureDir(APPS);
+ensureDir(OBF);
 
-      fs.writeFileSync(htmlDst, newHtml);
-      console.log(`✅ [inline→js]  ${app}`);
-      ok++;
-    } catch(e) {
-      console.error(`❌ ${app}: ${e.message.slice(0, 80)}`);
-      skip++;
-    }
+const apps = fs.readdirSync(APPS).filter(n =>
+  fs.statSync(path.join(APPS, n)).isDirectory()
+);
+
+console.log(`\n🔍 ${apps.length} app(s) encontrado(s) em /Apps/\n`);
+
+let done = 0, skipped = 0, errors = 0;
+
+for (const app of apps) {
+  const appDir    = path.join(APPS, app);
+  const backupDir = path.join(OBF, app);
+
+  const extracted = extractJS(appDir);
+
+  if (!extracted) {
+    console.warn(`⚠️  ${app} — nenhum JS encontrado, ignorado`);
+    skipped++;
     continue;
   }
 
-  console.warn(`⚠️  ${app} — sem main.html nem script.js`);
-  skip++;
+  if (isObfuscated(extracted.code)) {
+    console.log(`⏭  ${app} — já ofuscado`);
+    skipped++;
+    continue;
+  }
+
+  const hasBackup = fs.existsSync(backupDir);
+
+  if (hasBackup) {
+    console.log(`⏭  ${app} — backup já existe em /obf/Apps/, pulando`);
+    skipped++;
+    continue;
+  }
+
+  console.log(`📋 ${app} — copiando original pra /obf/Apps/...`);
+  copyDir(appDir, backupDir);
+
+  try {
+    writeObfuscated(appDir, extracted);
+    console.log(`✅ ${app} — ofuscado`);
+    done++;
+  } catch(e) {
+    console.error(`❌ ${app} — erro ao ofuscar: ${e.message.slice(0, 100)}`);
+    errors++;
+  }
 }
 
 console.log(`\n${'─'.repeat(50)}`);
-console.log(`🔒 ${ok} obfuscado(s)  |  ⚠️  ${skip} ignorado(s)`);
-console.log(`\n📂 /obf/Apps/  → seus originais (edite aqui)`);
-console.log(`📂 /Apps/      → obfuscados (Vercel serve daqui)`);
-console.log(`\n🚀 git add . && git commit -m "deploy" && git push`);
-console.log(`💡 /obf/ no .gitignore — não vai pro GitHub\n`);
+console.log(`🔒 ${done} ofuscado(s)  |  ⏭  ${skipped} ignorado(s)  |  ❌ ${errors} erro(s)`);
+console.log(`\n📂 /obf/Apps/  → originais limpos (nunca sobrescritos)`);
+console.log(`📂 /Apps/      → ofuscados (Vercel serve daqui)`);
+console.log(`\n🚀 git add . && git commit -m "deploy" && git push\n`);

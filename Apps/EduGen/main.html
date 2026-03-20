@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduGen — Gerador de Atividades com IA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="icon" href="../../src/imgs/UTILI.png" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">Edu<span>Gen</span></div>
+  <div class="topbar-actions">
+    <button class="btn-sm" id="btn-editar" onclick="toggleEdit()" style="display:none">✏️ Editar</button>
+    <button class="btn-sm" id="btn-regenerar" onclick="gerar()" style="display:none">🔄 Regenerar</button>
+    <button class="btn-sm primary" id="btn-imprimir" onclick="window.print()" style="display:none">🖨️ Imprimir</button>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div>
+      <div class="section-label">Matéria ou tema</div>
+      <textarea id="tema" placeholder="Ex: Verb to be, Sistema Solar, Frações..."></textarea>
+    </div>
+    <div>
+      <div class="section-label">Tipo de conteúdo</div>
+      <div class="style-toggle">
+        <button class="style-btn active" id="btn-explicacao" onclick="setTipo('explicacao',this)">📖 Explicação</button>
+        <button class="style-btn" id="btn-dever" onclick="setTipo('dever',this)">✏️ Dever</button>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-label">Estilo visual</div>
+      <div class="style-toggle">
+        <button class="style-btn active" id="btn-neutro" onclick="setEstilo('neutro',this)">⬜ Neutro</button>
+        <button class="style-btn" id="btn-bonito" onclick="setEstilo('bonito',this)">🎨 Bonito</button>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">Dificuldade</div>
+      <div class="style-toggle three">
+        <button class="style-btn active" id="btn-facil" onclick="setDif('facil',this)">🟢 Fácil</button>
+        <button class="style-btn" id="btn-medio" onclick="setDif('medio',this)">🟡 Médio</button>
+        <button class="style-btn" id="btn-dificil" onclick="setDif('dificil',this)">🔴 Difícil</button>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">Quantidade de questões</div>
+      <div class="count-row">
+        <div class="count-ctrl">
+          <button class="count-btn" onclick="changeCount(-1)">−</button>
+          <span id="count-val">6</span>
+          <button class="count-btn" onclick="changeCount(1)">+</button>
+        </div>
+        <span style="font-size:12px;color:var(--muted)">máx 12</span>
+      </div>
+    </div>
+    <div id="personalizar-wrap" style="display:none">
+      <div class="section-label">
+        Formato da atividade
+        <span class="info-dot">?<span class="tooltip">Como as questões devem aparecer. Deixe vazio para a IA decidir.</span></span>
+      </div>
+      <input class="field-input" id="personalizar" placeholder="Ex: completar frases, marcar X, colunas..." />
+      <div class="chips">
+        <span class="chip" onclick="addChip('ligação de colunas')">🔗 colunas</span>
+        <span class="chip" onclick="addChip('completar frases')">✍️ completar</span>
+        <span class="chip" onclick="addChip('marcar X')">✅ marcar X</span>
+        <span class="chip" onclick="addChip('com emojis')">😊 emojis</span>
+        <span class="chip" onclick="addChip('montar frases')">🧩 montar</span>
+        <span class="chip" onclick="addChip('múltipla escolha')">📝 múltipla</span>
+      </div>
+    </div>
+    <button class="gen-btn" id="gen-btn" onclick="gerar()">✦ Gerar Atividade</button>
+  </aside>
+
+  <main class="main">
+    <div class="viewer-bar">
+      <span style="font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.5px;">VISUALIZAÇÃO — FOLHA A4</span>
+    </div>
+    <div class="viewer-wrap">
+      <div class="a4-stage">
+        <div class="empty-state" id="empty-state">
+          <div class="empty-icon">📄</div>
+          <div>Configure as opções e clique em <strong>Gerar Atividade</strong></div>
+        </div>
+        <div class="loading-state" id="loading-state">
+          <div class="loading-dots"><span></span><span></span><span></span></div>
+          <div class="loading-text" id="loading-text">Pensando como um professor...</div>
+        </div>
+        <div id="sheet-content"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+
+</body>
+</html>

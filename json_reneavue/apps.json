@@ -145,6 +145,30 @@
     },
     {
         "dono": "PAULO",
+        "nomePrograma": "Edu GEN",
+        "tipoPrograma": "AI GENERATOR",
+        "foto": "src/imgs/imgs++/tioPaulo.png",
+        "descricao": "Gerador de Deveres Escolares com IA gratuitamente!",
+        "fixado": true,
+        "link": "",
+        "src": "Apps/EduGen/main.html",
+        "dataCriacao": "20/03/2026",
+        "videoIlustration": "https://youtu.be/w0L5oRzNQJk"
+    },
+    {
+        "dono": "PAULO",
+        "nomePrograma": "MindMap AI",
+        "tipoPrograma": "AI GENERATOR",
+        "foto": "src/imgs/imgs++/tioPaulo.png",
+        "descricao": "Gerador de Mapas Mentais com esforço e com IA gratuitamente!",
+        "fixado": true,
+        "link": "",
+        "src": "Apps/MindMapAI/main.html",
+        "dataCriacao": "20/03/2026",
+        "videoIlustration": "https://youtu.be/w0L5oRzNQJk"
+    },
+    {
+        "dono": "PAULO",
         "nomePrograma": "Text Shortner",
         "tipoPrograma": "EDITOR AI",
         "foto": "src/imgs/imgs++/tioPaulo.png",

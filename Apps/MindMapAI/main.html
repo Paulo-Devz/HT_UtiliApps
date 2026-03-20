@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MindMap IA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="../../src/imgs/UTILI.png">
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-glow-1"></div>
+<div class="bg-glow-2"></div>
+
+<header class="topbar">
+  <div>
+    <div class="brand">MindMap IA</div>
+    <div class="brand-tag">Gerador visual com inteligência artificial</div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div>
+      <div class="field-label">Tema ou matéria</div>
+      <textarea id="tema" placeholder="Ex: Sistema Solar, Verb to Be, 2ª Guerra Mundial..."></textarea>
+    </div>
+    <div>
+      <div class="field-label">Complexidade</div>
+      <div class="toggle-grid">
+        <button class="tog-btn on" id="btn-p" onclick="setComp('pequeno',this)">🌱 Pequeno</button>
+        <button class="tog-btn" id="btn-c" onclick="setComp('complexo',this)">🌿 Complexo</button>
+      </div>
+    </div>
+    <div id="count-wrap" style="display:none">
+      <div class="field-label">Número de tópicos</div>
+      <div class="count-row">
+        <div class="count-ctrl">
+          <button class="cnt-btn" onclick="chg(-1)">−</button>
+          <span id="count-val">6</span>
+          <button class="cnt-btn" onclick="chg(1)">+</button>
+        </div>
+        <span style="font-size:11px;color:rgba(167,139,250,.5)">4 – 12</span>
+      </div>
+    </div>
+    <div>
+      <div class="field-label">Estilo do mapa</div>
+      <div class="toggle-grid three">
+        <button class="tog-btn on" id="s-min" onclick="setStyle('minimal',this)">▣ Minimal</button>
+        <button class="tog-btn" id="s-col" onclick="setStyle('color',this)">◉ Colorido</button>
+        <button class="tog-btn" id="s-hand" onclick="setStyle('hand',this)">✏ Mão</button>
+      </div>
+    </div>
+    <button class="gen-btn" id="gen-btn" onclick="go()">✦ Gerar Mapa Mental</button>
+    <div class="divider"></div>
+    <div>
+      <div class="field-label">Exportar</div>
+      <button class="exp-btn" id="e-png" onclick="xPNG()" disabled>🖼 Salvar PNG</button>
+      <button class="exp-btn" id="e-pdf" onclick="xPDF()" disabled>📄 Salvar PDF</button>
+    </div>
+  </aside>
+
+  <main class="canvas-main" id="canvas-main">
+    <div class="empty-card" id="empty">
+      <div class="icon">🧠</div>
+      <div class="ttl">Seu mapa aparece aqui</div>
+      <div class="sub">Digite um tema e clique em Gerar para visualizar o mapa mental</div>
+    </div>
+    <div class="loading-card" id="loader">
+      <div class="dots"><span></span><span></span><span></span></div>
+      <div class="load-msg" id="load-msg">Organizando as ideias...</div>
+    </div>
+    <div id="map-wrap">
+      <svg id="map-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>

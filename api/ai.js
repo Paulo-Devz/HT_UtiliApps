@@ -1,7 +1,5 @@
-// HT_UtiliApps/api/ai.js
-
 export const config = {
-  maxDuration: 30, // aumenta o limite pro Vercel não cortar
+  maxDuration: 60,
 };
 
 export default async function handler(req, res) {
@@ -9,7 +7,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Método não permitido.' });
   }
 
-  const { prompt, max_tokens } = req.body;
+  const { prompt, max_tokens, json_mode } = req.body;
   if (!prompt) return res.status(400).json({ error: 'Prompt ausente.' });
 
   if (!process.env.GROQ_API_KEY) {
@@ -17,17 +15,23 @@ export default async function handler(req, res) {
   }
 
   try {
+    const body = {
+      model: 'llama-3.3-70b-versatile',
+      max_tokens: max_tokens || 4000,
+      messages: [{ role: 'user', content: prompt }],
+    };
+
+    if (json_mode) {
+      body.response_format = { type: 'json_object' };
+    }
+
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method:  'POST',
+      method: 'POST',
       headers: {
-        'Content-Type':  'application/json',
+        'Content-Type': 'application/json',
         'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
       },
-      body: JSON.stringify({
-        model:      'llama-3.1-8b-instant', // modelo mais rápido, evita timeout
-        max_tokens: max_tokens || 1000,
-        messages:   [{ role: 'user', content: prompt }],
-      }),
+      body: JSON.stringify(body),
     });
 
     const data = await response.json();

@@ -359,7 +359,7 @@
         .carousel-track {
             display: flex;
             gap: 30px;
-            animation: scroll 30s linear infinite;
+            animation: scroll 10s linear infinite;
         }
 
         @keyframes scroll {

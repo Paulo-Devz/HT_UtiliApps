@@ -145,7 +145,7 @@
     },
     {
         "dono": "PAULO",
-        "nomePrograma": "Edu GEN",
+        "nomePrograma": "Edugen",
         "tipoPrograma": "AI GENERATOR",
         "foto": "src/imgs/imgs++/tioPaulo.png",
         "descricao": "Gerador de Deveres Escolares com IA gratuitamente!",
@@ -157,7 +157,7 @@
     },
     {
         "dono": "PAULO",
-        "nomePrograma": "MindMap AI",
+        "nomePrograma": "Mindmap AI",
         "tipoPrograma": "AI GENERATOR",
         "foto": "src/imgs/imgs++/tioPaulo.png",
         "descricao": "Gerador de Mapas Mentais com esforço e com IA gratuitamente!",
@@ -182,7 +182,7 @@
     {
         "dono": "PAULO",
         "nomePrograma": "Study AI",
-        "tipoPrograma": "STUDY AI",
+        "tipoPrograma": "EDITOR AI",
         "foto": "src/imgs/imgs++/tioPaulo.png",
         "descricao": "Inteligencia artificial capaz de ajudar nos estudos!",
         "fixado": true,

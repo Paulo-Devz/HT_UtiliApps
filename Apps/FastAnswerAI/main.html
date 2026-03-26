@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FastAnswer AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --surface2: #181818;
+      --border: #2a2a2a;
+      --text: #e8e8e8;
+      --muted: #555;
+      --muted2: #777;
+      --green: #00ff88;
+      --yellow: #ffcc00;
+      --red: #ff4444;
+      --green-dim: rgba(0,255,136,0.08);
+      --yellow-dim: rgba(255,204,0,0.08);
+      --red-dim: rgba(255,68,68,0.08);
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-sans: 'Syne', sans-serif;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: var(--font-mono);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    ::selection { background: var(--green); color: #000; }
+
+    .scanlines {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    }
+
+    .noise {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px;
+    }
+
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,10,10,0.96); backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px; height: 54px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .brand {
+      font-family: var(--font-sans);
+      font-size: 18px; font-weight: 800;
+      letter-spacing: -0.5px;
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    .brand-icon {
+      width: 28px; height: 28px;
+      background: var(--green);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; color: #000; font-weight: 700;
+    }
+
+    .brand-name { color: var(--text); }
+    .brand-name em { color: var(--green); font-style: normal; }
+
+    .status-bar {
+      display: flex; align-items: center; gap: 16px;
+      font-size: 11px; color: var(--muted2);
+    }
+
+    .status-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: blink 2s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    .app { display: grid; grid-template-columns: 340px 1fr; min-height: calc(100vh - 54px); position: relative; z-index: 1; }
+
+    .sidebar {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 28px 24px;
+      display: flex; flex-direction: column; gap: 24px;
+      overflow-y: auto;
+    }
+
+    .label {
+      font-size: 10px; font-weight: 500; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--muted2);
+      margin-bottom: 10px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .label::before { content: '//'; color: var(--green); font-weight: 700; }
+
+    .input-box {
+      position: relative;
+    }
+
+    .prompt-prefix {
+      position: absolute; left: 14px; top: 14px;
+      font-size: 13px; color: var(--green); font-weight: 700;
+      pointer-events: none;
+    }
+
+    textarea#pergunta {
+      width: 100%; min-height: 120px;
+      padding: 13px 14px 13px 34px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 13px; color: var(--text);
+      resize: vertical; outline: none; line-height: 1.7;
+      transition: border-color .2s;
+    }
+    textarea#pergunta::placeholder { color: var(--muted); }
+    textarea#pergunta:focus { border-color: var(--green); }
+
+    .photo-drop {
+      border: 1px dashed var(--border);
+      border-radius: 6px; padding: 18px;
+      text-align: center; cursor: pointer;
+      transition: all .2s; background: var(--surface2);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+    }
+    .photo-drop:hover { border-color: var(--green); background: var(--green-dim); }
+    .photo-drop input { display: none; }
+    .photo-drop .icon { font-size: 22px; opacity: .5; }
+    .photo-drop p { font-size: 11px; color: var(--muted2); line-height: 1.5; }
+    .photo-drop.has-img { border-color: var(--green); }
+    .photo-drop.has-img p { color: var(--green); }
+
+    .method-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+    .method-btn {
+      padding: 10px 6px; border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      font-family: var(--font-mono);
+      font-size: 11px; font-weight: 500;
+      cursor: pointer; transition: all .18s;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      color: var(--muted2);
+    }
+    .method-btn .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .method-btn.g .dot { background: var(--green); }
+    .method-btn.y .dot { background: var(--yellow); }
+    .method-btn.r .dot { background: var(--red); }
+    .method-btn.g.on { border-color: var(--green); background: var(--green-dim); color: var(--green); box-shadow: inset 0 0 0 1px var(--green); }
+    .method-btn.y.on { border-color: var(--yellow); background: var(--yellow-dim); color: var(--yellow); box-shadow: inset 0 0 0 1px var(--yellow); }
+    .method-btn.r.on { border-color: var(--red); background: var(--red-dim); color: var(--red); box-shadow: inset 0 0 0 1px var(--red); }
+
+    .run-btn {
+      width: 100%; padding: 14px;
+      background: var(--green); color: #000;
+      border: none; border-radius: 6px;
+      font-family: var(--font-sans);
+      font-size: 14px; font-weight: 700;
+      cursor: pointer; transition: all .15s;
+      letter-spacing: .5px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .run-btn:hover { filter: brightness(1.1); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,255,136,0.25); }
+    .run-btn:active { transform: translateY(0); }
+    .run-btn:disabled { opacity: .3; cursor: not-allowed; transform: none; filter: none; box-shadow: none; }
+
+    .divider { height: 1px; background: var(--border); }
+
+    .history-list { display: flex; flex-direction: column; gap: 6px; max-height: 200px; overflow-y: auto; }
+    .hist-item {
+      padding: 8px 12px; border-radius: 4px;
+      border: 1px solid var(--border); background: var(--surface2);
+      font-size: 11px; color: var(--muted2); cursor: pointer;
+      transition: all .15s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .hist-item:hover { border-color: var(--green); color: var(--text); }
+
+    .main {
+      display: flex; flex-direction: column;
+      background: var(--bg);
+    }
+
+    .output-bar {
+      padding: 12px 28px; border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 11px;
+    }
+
+    .output-path { color: var(--muted2); display: flex; align-items: center; gap: 6px; }
+    .output-path span { color: var(--green); }
+    .bar-actions { display: flex; gap: 8px; }
+
+    .bar-btn {
+      padding: 5px 12px; border-radius: 4px;
+      border: 1px solid var(--border); background: transparent;
+      font-family: var(--font-mono); font-size: 11px;
+      color: var(--muted2); cursor: pointer; transition: all .15s;
+    }
+    .bar-btn:hover { border-color: var(--green); color: var(--green); }
+    .bar-btn:disabled { opacity: .3; cursor: not-allowed; }
+
+    .output-area { flex: 1; padding: 32px 36px; overflow-y: auto; }
+
+    .empty-terminal {
+      display: flex; flex-direction: column; align-items: flex-start;
+      gap: 6px; padding-top: 20px;
+    }
+    .term-line { font-size: 13px; color: var(--muted); line-height: 1.8; }
+    .term-line .cursor {
+      display: inline-block; width: 8px; height: 15px;
+      background: var(--green); vertical-align: middle;
+      animation: blink 1s step-end infinite;
+    }
+
+    .loading-screen { display: none; flex-direction: column; gap: 16px; padding-top: 20px; }
+    .loading-screen.on { display: flex; }
+    .load-line { font-size: 12px; color: var(--muted2); display: flex; align-items: center; gap: 10px; }
+    .load-spin {
+      width: 14px; height: 14px; border: 2px solid var(--border);
+      border-top-color: var(--green); border-radius: 50%;
+      animation: spin .6s linear infinite; flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .result-wrap { display: none; }
+    .result-wrap.on { display: block; animation: fadeUp .3s ease; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+    .result-header {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 28px; padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .result-header .q-text {
+      font-family: var(--font-mono); font-size: 14px; color: var(--text);
+      flex: 1;
+    }
+    .result-header .q-label { font-size: 10px; letter-spacing: 2px; color: var(--muted); }
+
+    .subject-tag {
+      padding: 4px 12px; border-radius: 20px;
+      font-size: 10px; font-weight: 600; letter-spacing: 1px;
+      text-transform: uppercase;
+      background: var(--green-dim); border: 1px solid rgba(0,255,136,.3);
+      color: var(--green);
+    }
+
+    .methods-output { display: flex; flex-direction: column; gap: 16px; }
+
+    .method-block {
+      border: 1px solid var(--border);
+      border-radius: 8px; overflow: hidden;
+    }
+
+    .method-header {
+      padding: 12px 18px; display: flex; align-items: center; gap: 10px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer; user-select: none;
+    }
+    .method-header:hover { background: rgba(255,255,255,.02); }
+
+    .method-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .method-name { font-family: var(--font-sans); font-size: 13px; font-weight: 700; }
+    .method-desc { font-size: 11px; color: var(--muted2); margin-left: auto; }
+
+    .method-body { padding: 20px 18px; }
+
+    .method-body.green { background: var(--green-dim); border-top: 2px solid var(--green); }
+    .method-body.yellow { background: var(--yellow-dim); border-top: 2px solid var(--yellow); }
+    .method-body.red { background: var(--red-dim); border-top: 2px solid var(--red); }
+
+    .answer-text {
+      font-family: var(--font-mono); font-size: 13px;
+      line-height: 1.85; color: var(--text); white-space: pre-wrap;
+    }
+
+    .math-box {
+      margin: 12px 0; padding: 14px 18px;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid var(--border);
+      border-left: 3px solid;
+      border-radius: 4px;
+      font-family: var(--font-mono); font-size: 14px;
+      line-height: 1.9;
+    }
+    .math-box.green { border-left-color: var(--green); color: var(--green); }
+    .math-box.yellow { border-left-color: var(--yellow); color: var(--yellow); }
+    .math-box.red { border-left-color: var(--red); color: var(--red); }
+
+    .macete-box {
+      margin: 12px 0; padding: 12px 16px;
+      background: rgba(255,204,0,0.05);
+      border: 1px dashed rgba(255,204,0,0.3);
+      border-radius: 4px;
+      font-size: 12px; color: var(--yellow); line-height: 1.7;
+    }
+    .macete-box::before { content: '⚡ MACETE: '; font-weight: 700; }
+
+    .multi-results { display: flex; flex-direction: column; gap: 28px; }
+    .multi-item { border-left: 2px solid var(--border); padding-left: 20px; }
+    .multi-item-label {
+      font-size: 11px; letter-spacing: 2px; color: var(--muted); margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .toast {
+      position: fixed; bottom: 24px; right: 24px; z-index: 999;
+      background: var(--surface2); border: 1px solid var(--green);
+      color: var(--green); padding: 10px 18px; border-radius: 6px;
+      font-family: var(--font-mono); font-size: 12px;
+      opacity: 0; transform: translateY(8px);
+      transition: all .2s; pointer-events: none;
+    }
+    .toast.on { opacity: 1; transform: translateY(0); }
+
+    @media (max-width:900px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar { border-right: none; border-bottom: 1px solid var(--border); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="scanlines"></div>
+<div class="noise"></div>
+
+<header>
+  <div class="brand">
+    <div class="brand-icon">⚡</div>
+    <div class="brand-name">Fast<em>Answer</em> AI</div>
+  </div>
+  <div class="status-bar">
+    <div class="status-dot"></div>
+    <span>modelo ativo</span>
+    <span style="color:var(--border)">|</span>
+    <span id="req-count">0 resoluções</span>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+
+    <div>
+      <div class="label">Pergunta ou exercício</div>
+      <div class="input-box">
+        <span class="prompt-prefix">&gt;</span>
+        <textarea id="pergunta" placeholder="Digite sua dúvida, exercício ou várias questões numeradas..."></textarea>
+      </div>
+    </div>
+
+    <div>
+      <div class="label">Enviar foto</div>
+      <label class="photo-drop" id="photo-drop">
+        <input type="file" id="photo-input" accept="image/*" onchange="handlePhoto(this)" />
+        <div class="icon">📸</div>
+        <p id="photo-label">Clique para enviar imagem da questão<br><span style="color:var(--muted);font-size:10px">JPG, PNG, WEBP</span></p>
+      </label>
+    </div>
+
+    <div>
+      <div class="label">Método de explicação</div>
+      <div class="method-grid">
+        <button class="method-btn g on" id="m-g" onclick="setMethod('g',this)">
+          <span class="dot"></span>Verde
+        </button>
+        <button class="method-btn y" id="m-y" onclick="setMethod('y',this)">
+          <span class="dot"></span>Amarelo
+        </button>
+        <button class="method-btn r" id="m-r" onclick="setMethod('r',this)">
+          <span class="dot"></span>Vermelho
+        </button>
+      </div>
+    </div>
+
+    <button class="run-btn" id="run-btn" onclick="resolver()">
+      <span>▶</span> RESOLVER AGORA
+    </button>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="label">Histórico recente</div>
+      <div class="history-list" id="history-list">
+        <div class="hist-item" style="color:var(--muted);cursor:default">Nenhuma resolução ainda</div>
+      </div>
+    </div>
+
+  </aside>
+
+  <main class="main">
+    <div class="output-bar">
+      <div class="output-path">
+        <span>~/fastanswer</span> / output.txt
+      </div>
+      <div class="bar-actions">
+        <button class="bar-btn" id="btn-copy" onclick="copyResult()" disabled>copiar</button>
+        <button class="bar-btn" id="btn-clear" onclick="clearResult()" disabled>limpar</button>
+      </div>
+    </div>
+
+    <div class="output-area" id="output-area">
+
+      <div class="empty-terminal" id="empty-state">
+        <div class="term-line">$ fastanswer --init</div>
+        <div class="term-line" style="color:var(--green)">✓ sistema pronto</div>
+        <div class="term-line">$ aguardando entrada...<span class="cursor"></span></div>
+        <div class="term-line" style="margin-top:16px;color:var(--muted2)">
+          dica: você pode digitar várias questões numeradas
+        </div>
+        <div class="term-line" style="color:var(--muted);font-size:12px">
+          ex: 1) √25  2) 20% de 50  3) 2x+4=10
+        </div>
+      </div>
+
+      <div class="loading-screen" id="loading-screen">
+        <div class="load-line"><div class="load-spin"></div> lendo entrada...</div>
+        <div class="load-line" id="load-msg2" style="opacity:.5"><div class="load-spin"></div> identificando matéria...</div>
+        <div class="load-line" id="load-msg3" style="opacity:.3"><div class="load-spin"></div> calculando resolução...</div>
+      </div>
+
+      <div class="result-wrap" id="result-wrap"></div>
+
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let method = 'g';
+  let reqCount = 0;
+  let lastResult = '';
+  let photoBase64 = null;
+  let history = [];
+
+  const methodNames = { g: 'Verde', y: 'Amarelo', r: 'Vermelho' };
+  const methodDescs = {
+    g: 'direto ao ponto',
+    y: 'com macetes',
+    r: 'passo a passo total'
+  };
+
+  function setMethod(v, el) {
+    method = v;
+    document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('on'));
+    el.classList.add('on');
+  }
+
+  function toast(m) {
+    const t = document.getElementById('toast');
+    t.textContent = m; t.classList.add('on');
+    setTimeout(() => t.classList.remove('on'), 2400);
+  }
+
+  function handlePhoto(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      photoBase64 = e.target.result.split(',')[1];
+      document.getElementById('photo-drop').classList.add('has-img');
+      document.getElementById('photo-label').textContent = `📸 ${file.name}`;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function buildPrompt(pergunta) {
+    const metodosDesc = {
+      g: 'Método Verde: resposta direta e objetiva, sem rodeios. Apenas a resolução.',
+      y: 'Método Amarelo: explica com macetes e atalhos mentais. Mostra o raciocínio de forma esperta.',
+      r: 'Método Vermelho: explicação ultra detalhada passo a passo para iniciantes completos. Cada etapa explicada como se fosse a primeira vez.'
+    };
+
+    const allMethods = `
+${metodosDesc.g}
+${metodosDesc.y}
+${metodosDesc.r}`;
+
+    return `Você é um resolvedor de questões educativas especialista em didática.
+
+PERGUNTA/QUESTÃO: "${pergunta}"
+
+Resolva usando os 3 métodos. Se houver múltiplas questões (numeradas), resolva cada uma separadamente.
+
+Retorne APENAS JSON válido:
+{
+  "materia": "Matemática|Português|Inglês|Ciências|História|outro",
+  "multiplas": false,
+  "questoes": [
+    {
+      "enunciado": "texto da questão",
+      "metodo_verde": {
+        "resposta": "resposta direta",
+        "calculo": "expressão matemática ou fórmula se houver (ex: √16 = 4)",
+        "macete": null
+      },
+      "metodo_amarelo": {
+        "resposta": "resposta com raciocínio esperto",
+        "calculo": "expressão ou fórmula",
+        "macete": "macete se existir (ex: 20% de 10 → corta zero → 2×1=2)"
+      },
+      "metodo_vermelho": {
+        "resposta": "explicação passo a passo completa",
+        "calculo": "expressão ou fórmula",
+        "macete": null
+      }
+    }
+  ]
+}
+
+REGRAS:
+1. Se múltiplas questões, multiplas=true e coloque cada uma no array questoes
+2. calculo: só preencha se for matemática/cálculo, senão null
+3. macete: só preencha se existir um macete real e útil, senão null
+4. resposta: texto claro sem asteriscos ou traços como marcadores
+5. Retorne APENAS o JSON`;
+  }
+
+  async function resolver() {
+    const pergunta = document.getElementById('pergunta').value.trim();
+    if (!pergunta && !photoBase64) { toast('Digite uma pergunta primeiro!'); return; }
+
+    const btn = document.getElementById('run-btn');
+    btn.disabled = true; btn.textContent = '⏳ resolvendo...';
+
+    document.getElementById('empty-state').style.display = 'none';
+    document.getElementById('result-wrap').classList.remove('on');
+    document.getElementById('loading-screen').classList.add('on');
+    document.getElementById('btn-copy').disabled = true;
+    document.getElementById('btn-clear').disabled = true;
+
+    setTimeout(() => { document.getElementById('load-msg2').style.opacity = '1'; }, 800);
+    setTimeout(() => { document.getElementById('load-msg3').style.opacity = '1'; }, 1600);
+
+    try {
+      let messages;
+
+      if (photoBase64) {
+        messages = [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: photoBase64 } },
+            { type: 'text', text: buildPrompt(pergunta || 'questão da imagem') }
+          ]
+        }];
+      }
+
+      const body = { prompt: buildPrompt(pergunta), max_tokens: 3000, json_mode: true };
+
+      const res = await fetch('/api/ai', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+
+      const data = await res.json();
+      if (!res.ok || data.error) throw new Error(data.error || 'Erro');
+
+      let raw = data.result.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
+      const s = raw.indexOf('{'), e = raw.lastIndexOf('}');
+      if (s !== -1 && e !== -1) raw = raw.slice(s, e + 1);
+
+      const obj = JSON.parse(raw);
+      renderResult(obj, pergunta);
+
+      reqCount++;
+      document.getElementById('req-count').textContent = `${reqCount} resolução${reqCount > 1 ? 'ões' : ''}`;
+
+      addHistory(pergunta);
+      toast('✓ resolvido');
+
+    } catch(err) {
+      document.getElementById('loading-screen').classList.remove('on');
+      document.getElementById('empty-state').style.display = 'flex';
+      toast('erro: ' + err.message);
+    } finally {
+      btn.disabled = false; btn.textContent = '▶ RESOLVER AGORA';
+    }
+  }
+
+  function colorClass(m) {
+    return m === 'verde' ? 'green' : m === 'amarelo' ? 'yellow' : 'red';
+  }
+
+  function renderQuestao(q, idx, total) {
+    const methods = [
+      { key: 'metodo_verde', label: '🟢 Método Verde', name: 'green', desc: 'direto ao ponto' },
+      { key: 'metodo_amarelo', label: '🟡 Método Amarelo', name: 'yellow', desc: 'com macetes' },
+      { key: 'metodo_vermelho', label: '🔴 Método Vermelho', name: 'red', desc: 'passo a passo' },
+    ];
+
+    let html = '';
+    if (total > 1) {
+      html += `<div class="multi-item-label">Questão ${idx + 1}</div>`;
+    }
+
+    html += `<div class="methods-output">`;
+
+    for (const m of methods) {
+      const md = q[m.key];
+      if (!md) continue;
+      html += `<div class="method-block">
+        <div class="method-header">
+          <div class="method-dot" style="background:var(--${m.name})"></div>
+          <div class="method-name" style="color:var(--${m.name})">${m.label}</div>
+          <div class="method-desc">${m.desc}</div>
+        </div>
+        <div class="method-body ${m.name}">`;
+
+      if (md.calculo) {
+        html += `<div class="math-box ${m.name}">${escHtml(md.calculo)}</div>`;
+      }
+
+      if (md.macete) {
+        html += `<div class="macete-box">${escHtml(md.macete)}</div>`;
+      }
+
+      html += `<div class="answer-text">${escHtml(md.resposta || '')}</div>`;
+      html += `</div></div>`;
+    }
+
+    html += `</div>`;
+    return html;
+  }
+
+  function renderResult(obj, pergunta) {
+    document.getElementById('loading-screen').classList.remove('on');
+
+    const questoes = obj.questoes || [];
+    const materia = obj.materia || 'Geral';
+
+    let html = `<div class="result-header">
+      <div>
+        <div class="q-label">PERGUNTA</div>
+        <div class="q-text">${escHtml(pergunta.slice(0, 120))}${pergunta.length > 120 ? '...' : ''}</div>
+      </div>
+      <div class="subject-tag">${escHtml(materia)}</div>
+    </div>`;
+
+    if (questoes.length > 1) {
+      html += `<div class="multi-results">`;
+      questoes.forEach((q, i) => {
+        html += `<div class="multi-item">${renderQuestao(q, i, questoes.length)}</div>`;
+      });
+      html += `</div>`;
+    } else if (questoes.length === 1) {
+      html += renderQuestao(questoes[0], 0, 1);
+    }
+
+    const wrap = document.getElementById('result-wrap');
+    wrap.innerHTML = html;
+    wrap.classList.add('on');
+
+    lastResult = wrap.innerText;
+    document.getElementById('btn-copy').disabled = false;
+    document.getElementById('btn-clear').disabled = false;
+  }
+
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function addHistory(q) {
+    history.unshift(q.slice(0, 60));
+    if (history.length > 8) history.pop();
+    const list = document.getElementById('history-list');
+    list.innerHTML = history.map(h =>
+      `<div class="hist-item" onclick="loadHistory(this)">${escHtml(h)}</div>`
+    ).join('');
+  }
+
+  function loadHistory(el) {
+    document.getElementById('pergunta').value = el.textContent;
+    resolver();
+  }
+
+  function copyResult() {
+    navigator.clipboard.writeText(lastResult).then(() => toast('✓ copiado'));
+  }
+
+  function clearResult() {
+    document.getElementById('result-wrap').classList.remove('on');
+    document.getElementById('empty-state').style.display = 'flex';
+    document.getElementById('btn-copy').disabled = true;
+    document.getElementById('btn-clear').disabled = true;
+    lastResult = '';
+  }
+
+  document.getElementById('pergunta').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && e.ctrlKey) resolver();
+  });
+</script>
+
+</body>
+</html>

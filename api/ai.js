@@ -7,8 +7,8 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Método não permitido.' });
   }
 
-  const { prompt, max_tokens, json_mode } = req.body;
-  if (!prompt) return res.status(400).json({ error: 'Prompt ausente.' });
+  const { prompt, max_tokens, json_mode, messages } = req.body;
+  if (!prompt && !messages) return res.status(400).json({ error: 'Prompt ou mensagens ausentes.' });
 
   if (!process.env.GROQ_API_KEY) {
     return res.status(500).json({ error: 'GROQ_API_KEY não configurada.' });
@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     const body = {
       model: 'llama-3.3-70b-versatile',
       max_tokens: max_tokens || 4000,
-      messages: [{ role: 'user', content: prompt }],
+      messages: messages || [{ role: 'user', content: prompt }],
     };
 
     if (json_mode) {

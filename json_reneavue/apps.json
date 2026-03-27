@@ -133,6 +133,18 @@
     },
     {
         "dono": "PAULO",
+        "nomePrograma": "FastAnswer AI",
+        "tipoPrograma": "AI HELPER",
+        "foto": "src/imgs/imgs++/tioPaulo.png",
+        "descricao": "Faça deveres de escola e aprenda a materia ao mesmo tempo gratuitamente!",
+        "fixado": true,
+        "link": "",
+        "src": "Apps/Slide_AI/main.html",
+        "dataCriacao": "18/03/2026",
+        "videoIlustration": "https://youtu.be/w0L5oRzNQJk"
+    },
+    {
+        "dono": "PAULO",
         "nomePrograma": "Slide AI",
         "tipoPrograma": "AI GENERATOR",
         "foto": "src/imgs/imgs++/tioPaulo.png",

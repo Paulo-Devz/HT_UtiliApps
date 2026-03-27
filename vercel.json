@@ -8,6 +8,19 @@
   "rewrites": [
     { "source": "/api/:path*", "destination": "/api/:path*" },
     { "source": "/",           "destination": "/index.html" },
-    { "source": "/:name",      "destination": "/Apps/:name/main.html" }
+    { "source": "/:name",      "destination": "/Apps/:name/main.html" },
+    
+    {
+      "source": "/Apps/:appName-:page(.*)",
+      "destination": "/:appName/:page"
+    },
+    {
+      "source": "/Apps/:appName_:page(.*)", 
+      "destination": "/:appName/:page"
+    },
+    {
+      "source": "/Apps/:path(.*)",
+      "destination": "/:path(.*)"
+    }
   ]
 }

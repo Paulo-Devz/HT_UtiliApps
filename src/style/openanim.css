@@ -1,0 +1,118 @@
+/* BOOT ANIMATION - UTILi APPS */
+.boot-overlay {
+  position:fixed; inset:0; z-index:9999; background:#000; 
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  font-family:'JetBrains Mono', monospace; color:#00ff88; text-align:center;
+  overflow:hidden; cursor:pointer;
+}
+.boot-container {
+  width:950px; height:600px; background:linear-gradient(145deg, #1a1a1a, #0f0f0f);
+  border:5px solid #333; border-radius:25px; position:relative;
+  box-shadow:0 0 60px rgba(0,255,136,0.4), inset 0 0 40px rgba(0,0,0,0.8);
+  animation: bootPulse 3s ease-in-out infinite alternate;
+}
+@keyframes bootPulse {
+  0% { box-shadow:0 0 60px rgba(0,255,136,0.3), inset 0 0 40px rgba(0,0,0,0.8); }
+  100% { box-shadow:0 0 90px rgba(0,255,136,0.6), inset 0 0 40px rgba(0,0,0,0.8); }
+}
+.screen-inner {
+  position:absolute; inset:25px; background:#000; border-radius:15px;
+  overflow:hidden; display:flex; flex-direction:column;
+}
+.screen-glow { box-shadow:inset 0 0 30px rgba(0,255,136,0.1); }
+
+/* ESTÁGIOS */
+.off-stage { animation: bootFade 4s forwards; }
+@keyframes bootFade {
+  0% { opacity:1; }
+  90% { opacity:1; }
+  100% { opacity:0; transform:scale(1.05); }
+}
+
+.utili-logo-off {
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  font-size:56px; font-weight:800; color:#00ff88;
+  text-shadow:0 0 20px currentColor; animation: logoFloat 2s ease-in-out infinite;
+}
+@keyframes logoFloat {
+  0%,100% { transform:translate(-50%,-50%) translateY(0px); }
+  50% { transform:translate(-50%,-50%) translateY(-10px); }
+}
+.power-circle {
+  position:absolute; bottom:40px; left:50%; transform:translateX(-50%);
+  width:70px; height:70px; border-radius:50%; background:#222;
+  border:4px solid #00ff88; display:flex; align-items:center; justify-content:center;
+  font-size:28px; cursor:pointer; transition:all .3s;
+  animation: powerPulse 2s infinite;
+}
+.power-circle:hover { background:#00ff88; color:#000; transform:translateX(-50%) scale(1.15); }
+@keyframes powerPulse {
+  0%,100% { box-shadow:0 0 25px rgba(0,255,136,0.5); }
+  50% { box-shadow:0 0 45px rgba(0,255,136,0.9); }
+}
+.boot-text {
+  position:absolute; bottom:140px; left:50%; transform:translateX(-50%);
+  font-size:14px; color:#666; line-height:1.6; opacity:0.7;
+}
+
+/* GOOGLE STAGE */
+.google-stage { display:none; background:#202124; }
+.google-header {
+  height:80px; background:linear-gradient(90deg, #4285f4, #34a853);
+  display:flex; align-items:center; padding:0 30px; color:white;
+  font-size:18px; font-weight:500;
+}
+.google-searchbar {
+  position:absolute; top:120px; left:50%; transform:translateX(-50%);
+  width:85%; height:55px; background:#fff; border-radius:30px;
+  display:flex; align-items:center; padding:0 25px; box-shadow:0 4px 20px rgba(0,0,0,0.3);
+  font-size:20px; color:#5f6368; animation: searchSlide 1s forwards;
+}
+@keyframes searchSlide {
+  0% { transform:translateX(-50%) translateY(30px); opacity:0; }
+  100% { transform:translateX(-50%) translateY(0); opacity:1; }
+}
+.google-input { border:none; outline:none; flex:1; font-size:20px; color:#333; }
+.google-mic { width:30px; height:30px; background:#4285f4; border-radius:50%; margin-left:15px; }
+.google-results {
+  position:absolute; bottom:120px; left:50%; transform:translateX(-50%);
+  width:90%; max-height:300px; overflow:hidden;
+}
+.result-item {
+  background:#fff; margin-bottom:15px; border-radius:12px; padding:20px;
+  box-shadow:0 2px 15px rgba(0,0,0,0.1); cursor:pointer; transition:all .3s;
+  animation: resultFade 0.5s forwards;
+}
+.result-item:hover { transform:translateY(-3px); box-shadow:0 8px 30px rgba(0,0,0,0.2); }
+@keyframes resultFade { from{opacity:0; transform:translateY(20px);} }
+.result-title { font-size:22px; font-weight:600; color:#1a0dab; margin-bottom:8px; }
+.result-url { color:#006621; font-size:16px; margin-bottom:12px; }
+.result-desc { color:#545454; line-height:1.5; }
+
+/* UTILi STAGE */
+.utili-stage { display:none; }
+.utili-welcome {
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  text-align:center; animation: utiliEnter 1.5s forwards;
+}
+@keyframes utiliEnter {
+  0% { opacity:0; transform:translate(-50%,-50%) scale(0.8); }
+  70% { opacity:1; transform:translate(-50%,-50%) scale(1.05); }
+  100% { opacity:1; transform:translate(-50%,-50%) scale(1); }
+}
+.utili-big { 
+  font-size:80px; font-weight:900; background:linear-gradient(45deg, #00ff88, #ffcc00);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  margin-bottom:25px; text-shadow:0 0 30px rgba(0,255,136,0.5);
+}
+.utili-subtitle { 
+  font-size:24px; color:#00ff88; margin-bottom:40px;
+  animation: subtitleGlow 2s ease-in-out infinite alternate;
+}
+@keyframes subtitleGlow { 0%{text-shadow:0 0 10px rgba(0,255,136,0.5);} 100%{text-shadow:0 0 20px rgba(0,255,136,0.8);} }
+.enter-btn {
+  padding:18px 40px; font-size:20px; font-weight:700; background:#00ff88;
+  color:#000; border:none; border-radius:50px; cursor:pointer;
+  box-shadow:0 10px 30px rgba(0,255,136,0.4); transition:all .3s;
+}
+.enter-btn:hover { transform:translateY(-5px); box-shadow:0 20px 50px rgba(0,255,136,0.6); }

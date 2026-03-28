@@ -10,6 +10,26 @@ function createStars() {
 }
 createStars();
 
+async function loadCounters() {
+    try {
+        // Apps
+        const appsResponse = await fetch('json_reneavue/apps.json');
+        const appsData = await appsResponse.json();
+        document.getElementById('stat-apps').textContent = appsData.length;
+
+        // Feedbacks
+        const feedbacksResponse = await fetch('json_reneavue/feedbacks.json');
+        const feedbacksData = await feedbacksResponse.json();
+        document.getElementById('stat-feedbacks').textContent = feedbacksData.length;
+    } catch (error) {
+        console.error('Erro ao carregar contadores:', error);
+        document.getElementById('stat-apps').textContent = '—';
+        document.getElementById('stat-feedbacks').textContent = '—';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadCounters);
+
 const cylinder = document.querySelector('.cylinder');
 const texts = ['PROGRAMAS', 'JOGOS', 'UTENSÍLIOS'];
 let idx = 0;

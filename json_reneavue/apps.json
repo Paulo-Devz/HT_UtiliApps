@@ -26,7 +26,7 @@
     {
         "dono": "PAULO",
         "nomePrograma": "Temporal",
-        "tipoPrograma": "TEMPO",
+        "tipoPrograma": "TOOL",
         "foto": "src/imgs/imgs++/tioPaulo.png",
         "descricao": "Veja o temporal de alguma cidade!",
         "fixado": false,
@@ -50,7 +50,7 @@
     {
         "dono": "PAULO",
         "nomePrograma": "Checklist de Produtividade",
-        "tipoPrograma": "CHECKLIST",
+        "tipoPrograma": "EDITOR",
         "foto": "src/imgs/imgs++/tioPaulo.png",
         "descricao": "Uma checklist Avançada com Salvamento de Dados!",
         "fixado": false,
@@ -62,7 +62,7 @@
     {
         "dono": "PAULO",
         "nomePrograma": "Gestor de Clientes e Produtos",
-        "tipoPrograma": "ARMAZENAMENTO",
+        "tipoPrograma": "EDITOR",
         "foto": "src/imgs/imgs++/tioPaulo.png",
         "descricao": "Uma checklist Avançada com Salvamento de Dados!",
         "fixado": false,
@@ -98,7 +98,7 @@
     {
         "dono": "PAULO",
         "nomePrograma": "Mapa Mental Online",
-        "tipoPrograma": "MAPA MENTAL",
+        "tipoPrograma": "EDITOR",
         "foto": "src/imgs/imgs++/tioPaulo.png",
         "descricao": "Mapa Mental Online para Você Usar!",
         "fixado": false,
@@ -110,7 +110,7 @@
     {
         "dono": "PAULO",
         "nomePrograma": "Conversor de Arquivos",
-        "tipoPrograma": "CONVERSOR",
+        "tipoPrograma": "TOOL",
         "foto": "src/imgs/imgs++/tioPaulo.png",
         "descricao": "Conversor de Arquivos Gratuito!",
         "fixado": false,
@@ -134,7 +134,7 @@
     {
         "dono": "PAULO",
         "nomePrograma": "FastAnswer AI",
-        "tipoPrograma": "AI HELPER",
+        "tipoPrograma": "AI",
         "foto": "src/imgs/imgs++/tioPaulo.png",
         "descricao": "Faça deveres de escola e aprenda a materia ao mesmo tempo gratuitamente!",
         "fixado": true,
@@ -146,7 +146,7 @@
     {
         "dono": "PAULO",
         "nomePrograma": "Slide AI",
-        "tipoPrograma": "AI GENERATOR",
+        "tipoPrograma": "AI",
         "foto": "src/imgs/imgs++/tioPaulo.png",
         "descricao": "Gerador de Slides profissionais com IA gratuitamente!",
         "fixado": true,
@@ -157,20 +157,8 @@
     },
     {
         "dono": "PAULO",
-        "nomePrograma": "Edugen",
-        "tipoPrograma": "AI GENERATOR",
-        "foto": "src/imgs/imgs++/tioPaulo.png",
-        "descricao": "Gerador de Deveres Escolares com IA gratuitamente!",
-        "fixado": true,
-        "link": "",
-        "src": "Apps/EduGen/main.html",
-        "dataCriacao": "20/03/2026",
-        "videoIlustration": "https://youtu.be/w0L5oRzNQJk"
-    },
-    {
-        "dono": "PAULO",
         "nomePrograma": "Mindmap AI",
-        "tipoPrograma": "AI GENERATOR",
+        "tipoPrograma": "AI",
         "foto": "src/imgs/imgs++/tioPaulo.png",
         "descricao": "Gerador de Mapas Mentais com esforço e com IA gratuitamente!",
         "fixado": true,
@@ -182,7 +170,7 @@
     {
         "dono": "PAULO",
         "nomePrograma": "Text Shortner",
-        "tipoPrograma": "EDITOR AI",
+        "tipoPrograma": "AI",
         "foto": "src/imgs/imgs++/tioPaulo.png",
         "descricao": "Resuma qualquer tipo de texto, explicação e tópicos!",
         "fixado": true,
@@ -194,7 +182,7 @@
     {
         "dono": "PAULO",
         "nomePrograma": "Study AI",
-        "tipoPrograma": "EDITOR AI",
+        "tipoPrograma": "AI",
         "foto": "src/imgs/imgs++/tioPaulo.png",
         "descricao": "Inteligencia artificial capaz de ajudar nos estudos!",
         "fixado": true,

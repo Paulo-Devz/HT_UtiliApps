@@ -8,14 +8,16 @@
     <link rel="icon" href="src/imgs/UTILI.png">
     <meta property="og:image" content="src/imgs/UTILI.png">
     <meta property="og:title" content="UtiliApps">
-    <meta property="og:description" content="UTILI, Progamas!">
+    <meta property="og:description" content="UTILI, Programas!">
 </head>
 <body>
-    <!-- Background Elements -->
     <div class="bg-grid"></div>
     <div class="grid-lines"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    <div class="bg-glow bg-glow-3"></div>
+    <div class="bg-sweep"></div>
 
-    <!-- Header -->
     <header>
         <div class="logo">UTILI APPS</div>
         <nav>
@@ -24,24 +26,43 @@
         </nav>
     </header>
 
-    <!-- Main Content -->
     <main>
         <div class="search-section">
             <h1 class="page-title">PROGRAMAS</h1>
+
             <div class="search-container">
                 <div class="search-box">
                     <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
-                    <input type="text" id="searchInput" placeholder="BARRA D PESQUISA">
+                    <input type="text" id="searchInput" placeholder="PESQUISAR PROGRAMAS...">
                 </div>
+
+                <select class="filter-select" id="filterTipo">
+                    <option value="">Todos os tipos</option>
+                </select>
+
+                <select class="filter-select" id="filterOrdem">
+                    <option value="padrao">Padrão</option>
+                    <option value="az">A → Z</option>
+                    <option value="za">Z → A</option>
+                    <option value="recente">Mais recentes</option>
+                    <option value="antigo">Mais antigos</option>
+                </select>
             </div>
+
+            <div class="filters-row" id="filtersRow">
+                <button class="filter-chip active" data-filter="todos" onclick="setChip(this,'todos')">Todos</button>
+                <button class="filter-chip" data-filter="recente" onclick="setChip(this,'recente')">🟢 Recentes</button>
+                <button class="filter-chip" data-filter="antigo" onclick="setChip(this,'antigo')">🕓 Antigos</button>
+                <button class="filter-chip" data-filter="fixado" onclick="setChip(this,'fixado')">📌 Fixados</button>
+                <button class="btn-reset" onclick="resetFiltros()">✕ Limpar filtros</button>
+            </div>
+
             <div class="search-result" id="searchResult">PESQUISA: NULL</div>
         </div>
 
-        <div class="programs-grid" id="programsGrid">
-            <!-- Cards serão gerados via JavaScript -->
-        </div>
+        <div class="programs-grid" id="programsGrid"></div>
     </main>
 
     <script src="src/scripts/ads-logic.js"></script>

@@ -1,26 +1,18 @@
 {
   "cleanUrls": true,
   "functions": {
-    "api/ai.js":        { "maxDuration": 60 },
+    "api/ai.js": { "maxDuration": 60 },
     "api/summarize.js": { "maxDuration": 60 },
-    "api/pexels.js":    { "maxDuration": 15 }
+    "api/pexels.js": { "maxDuration": 15 }
   },
   "rewrites": [
     { "source": "/api/:path*", "destination": "/api/:path*" },
-    { "source": "/",           "destination": "/index.html" },
-    { "source": "/:name",      "destination": "/Apps/:name/main.html" },
     
-    {
-      "source": "/Apps/:appName-:page(.*)",
-      "destination": "/:appName/:page"
-    },
-    {
-      "source": "/Apps/:appName_:page(.*)", 
-      "destination": "/:appName/:page"
-    },
-    {
-      "source": "/Apps/:path(.*)",
-      "destination": "/:path(.*)"
-    }
+    { "source": "/Apps/:appName_(.*)", "destination": "/:appName/$1" },
+    { "source": "/Apps/:appName-(.*)", "destination": "/:appName/$1" },
+    { "source": "/Apps/:path(.*)", "destination": "/:path(.*)" },
+    
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/:name", "destination": "/Apps/:name/main.html" }
   ]
 }

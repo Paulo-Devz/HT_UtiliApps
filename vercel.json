@@ -8,9 +8,7 @@
   "rewrites": [
     { "source": "/api/:path*", "destination": "/api/:path*" },
     
-    { "source": "/Apps/:appName_(.*)", "destination": "/:appName/$1" },
-    { "source": "/Apps/:appName-(.*)", "destination": "/:appName/$1" },
-    { "source": "/Apps/:path(.*)", "destination": "/:path(.*)" },
+    { "source": "/Apps/:appName/:path*", "destination": "/:appName/:path*" },
     
     { "source": "/", "destination": "/index.html" },
     { "source": "/:name", "destination": "/Apps/:name/main.html" }

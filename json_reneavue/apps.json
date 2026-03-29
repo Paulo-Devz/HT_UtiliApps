@@ -7,7 +7,7 @@
         "descricao": "Um avançado gerador de QR-CODE!",
         "fixado": false,
         "link": "",
-        "src": "Apps/Gerador_QRCODE/main.html",
+        "src": "Apps/QRGen/main.html",
         "dataCriacao": "25/12/2025",
         "videoIlustration": ""
     },
@@ -19,7 +19,7 @@
         "descricao": "Compactador de Texto Simples para o Dia Dia!",
         "fixado": false,
         "link": "",
-        "src": "Apps/Compactador_Texto/main.html",
+        "src": "Apps/TextCompact/main.html",
         "dataCriacao": "25/12/2025",
         "videoIlustration": ""
     },
@@ -55,7 +55,7 @@
         "descricao": "Uma checklist Avançada com Salvamento de Dados!",
         "fixado": false,
         "link": "",
-        "src": "Apps/Checklist_Produtividade/main.html",
+        "src": "Apps/ProductiveList/main.html",
         "dataCriacao": "10/10/2025",
         "videoIlustration": "https://youtu.be/itue2_7etkA"
     },
@@ -67,7 +67,7 @@
         "descricao": "Uma checklist Avançada com Salvamento de Dados!",
         "fixado": false,
         "link": "",
-        "src": "Apps/Mini_BancoDados/main.html",
+        "src": "Apps/UsualBank/main.html",
         "dataCriacao": "10/10/2025",
         "videoIlustration": "https://youtu.be/hjlIUGE22e4"
     },
@@ -79,7 +79,7 @@
         "descricao": "Uma Calculadora Que Possui Juros, Parcelamento e Investimento!",
         "fixado": false,
         "link": "",
-        "src": "Apps/Calculadora_Financeira/main.html",
+        "src": "Apps/FinanceC/main.html",
         "dataCriacao": "12/10/2025",
         "videoIlustration": "https://youtu.be/7qwDRgJGda0"
     },
@@ -91,7 +91,7 @@
         "descricao": "Editor de Foto Com Multifuncionalidades!",
         "fixado": false,
         "link": "",
-        "src": "Apps/Editor_Foto/main.html",
+        "src": "Apps/PicEditor/main.html",
         "dataCriacao": "12/10/2025",
         "videoIlustration": "https://youtu.be/GqPvdUhTfGQ"
     },
@@ -103,7 +103,7 @@
         "descricao": "Mapa Mental Online para Você Usar!",
         "fixado": false,
         "link": "",
-        "src": "Apps/MapaMental_Online/main.html",
+        "src": "Apps/OnlineMap/main.html",
         "dataCriacao": "13/10/2025",
         "videoIlustration": "https://youtu.be/ps25wMb4dRQ"
     },
@@ -115,7 +115,7 @@
         "descricao": "Conversor de Arquivos Gratuito!",
         "fixado": false,
         "link": "",
-        "src": "Apps/Conversor_Arquivos/main.html",
+        "src": "Apps/FileConversor/main.html",
         "dataCriacao": "13/10/2025",
         "videoIlustration": "https://youtu.be/w0L5oRzNQJk"
     },
@@ -127,7 +127,7 @@
         "descricao": "Mini função para pegar IP, Testar Wi-Fi e Gerar cores!",
         "fixado": false,
         "link": "",
-        "src": "Apps/Quick_Tools/main.html",
+        "src": "Apps/QuickTools/main.html",
         "dataCriacao": "16/03/2026",
         "videoIlustration": "https://youtu.be/w0L5oRzNQJk"
     },
@@ -151,7 +151,7 @@
         "descricao": "Gerador de Slides profissionais com IA gratuitamente!",
         "fixado": true,
         "link": "",
-        "src": "Apps/Slide_AI/main.html",
+        "src": "Apps/SlideAI/main.html",
         "dataCriacao": "18/03/2026",
         "videoIlustration": "https://youtu.be/w0L5oRzNQJk"
     },
@@ -175,7 +175,7 @@
         "descricao": "Resuma qualquer tipo de texto, explicação e tópicos!",
         "fixado": true,
         "link": "",
-        "src": "Apps/Text_Shortner/main.html",
+        "src": "Apps/TextShorter/main.html",
         "dataCriacao": "16/03/2026",
         "videoIlustration": "https://youtu.be/w0L5oRzNQJk"
     },
@@ -187,7 +187,7 @@
         "descricao": "Inteligencia artificial capaz de ajudar nos estudos!",
         "fixado": true,
         "link": "",
-        "src": "Apps/Study_AI/main.html",
+        "src": "Apps/StudyAI/main.html",
         "dataCriacao": "17/03/2026",
         "videoIlustration": "https://youtu.be/w0L5oRzNQJk"
     }

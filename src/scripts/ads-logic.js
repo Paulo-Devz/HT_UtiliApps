@@ -40,7 +40,7 @@ function abrirPrograma(src, link) {
     const destino = src.replace(/.*Apps\//, '').replace('/main.html', '');
 
     if (isBlocked()) {
-        window.location.href = 'Apps/' + destino + '/main.html';
+        window.open('Apps/' + destino + '/main.html', '_blank');
         return;
     }
 

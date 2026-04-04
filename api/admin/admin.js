@@ -45,13 +45,16 @@ async function handleIps(req, res, ip, action) {
       if (action === 'bloquear') {
         const { ip: alvo, motivo } = req.body || {};
         if (!alvo) return res.status(400).json({ error: 'IP obrigatório' });
-        if (ADMIN_IPS.includes(alvo)) return res.status(400).json({ error: 'Não é possível bloquear um IP admin.' });
-        await sqlClient`
+        if (ADMIN_IPS.includes(alvo)) return res.status(400).json({ error: 'Não é possível bloquear IP admin.' });
+        const result = await sqlClient`
           INSERT INTO ips_bloqueados (ip, motivo, criado_em)
           VALUES (${alvo}, ${motivo || 'bloqueado manualmente'}, NOW())
           ON CONFLICT (ip) DO UPDATE SET motivo = EXCLUDED.motivo, criado_em = NOW()
+          RETURNING *
         `;
+        console.log('IP bloqueado:', result[0]);
         return res.status(200).json({ ok: true });
+
       }
 
       if (action === 'desbloquear') {
@@ -61,6 +64,11 @@ async function handleIps(req, res, ip, action) {
         return res.status(200).json({ ok: true });
       }
     }
+
+      if (action === 'resetar') {
+        await sqlClient`DELETE FROM ips_bloqueados`;
+        return res.status(200).json({ ok: true });
+      }
 
     return res.status(400).json({ error: 'Ação inválida ips.' });
   } catch (e) {
@@ -254,7 +262,7 @@ export default async function handler(req, res) {
   const { section, action, periodo, search, nivel } = req.query;
 
   if (!section) {
-    return res.status(400).json({ error: 'section requerida (ips|anuncios|progamas|pesquisas)' });
+    return res.status(400).json({ error: 'section requerida (ips|anuncios|programas|pesquisas)' });
   }
 
   switch (section) {
@@ -262,7 +270,7 @@ export default async function handler(req, res) {
       return handleIps(req, res, ip, action);
     case 'anuncios':
       return handleAnuncios(req, res, ip, action, periodo);
-    case 'progamas':
+case 'programas':
       return handleProgamas(req, res, ip, action, periodo, search);
     case 'pesquisas':
       return handlePesquisas(req, res, ip, action, periodo, search, nivel);

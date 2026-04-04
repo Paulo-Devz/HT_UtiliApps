@@ -204,6 +204,16 @@ fetch('/json_reneavue/apps.json')
         render();
     });
 
-document.getElementById('searchInput').addEventListener('input', render);
+document.getElementById('searchInput').addEventListener('input', () => {
+    const termo = document.getElementById('searchInput').value.trim();
+    if (termo.length > 1) {
+        fetch('/api/admin/admin?section=pesquisas&action=registrar', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({termo})
+        }).catch(() => {});
+    }
+    render();
+});
 document.getElementById('filterTipo').addEventListener('change', render);
 document.getElementById('filterOrdem').addEventListener('change', render);

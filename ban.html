@@ -72,7 +72,7 @@
         const { ip } = await ipRes.json();
         document.getElementById('blockedIp').textContent = ip;
 
-        const checkRes = await fetch(`/api/block-check?ip=${ip}`);
+        const checkRes = await fetch(`/api/admin/admin?section=ips&action=check&ip=${ip}`);
         const data = await checkRes.json();
         
         if (data.bloqueado) {

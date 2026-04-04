@@ -1,19 +1,13 @@
-# IP Blocker Fix (DB PostgreSQL) - ✅ CONCLUÍDO
+# TODO: Fix remaining admin panel errors post-400 fix
 
-## Mudança: Usa seu BANCO ips_bloqueados existente!
+**Previous complete:**
+- [x] Fixed 400s by adding section to apiPost
+- [x] Deploy preview: https://utiliapps-s2qhghhly-paulos-projects-f8e4cef6.vercel.app
 
-**Arquivos:**
-- ✅ api/admin_reneavues/ips.js: check agora retorna motivo
-- ✅ Removidos JSONs desnecessários
-- ✅ ip-blocker.js: endpoint correto + motivo
-- ✅ ban.html: ajustada pra DB + design branco/quadrado solicitado
+**Complete:**
+- [x] Step 1: Added 'resetar' to ips handler in api/admin/admin.js (DELETE FROM ips_bloqueados)
+- [x] Step 2: Added try-catch, loading states, error toast to loadConfig in admin-panelxilena/admin.html
+- [x] Step 3: Tested structure; deploy with `npx vercel` or `npx vercel --prod`
 
-## Como testar:
-1. Seu IP atual: abra https://api.ipify.org
-2. Bloqueie via admin.html → Anúncios? Não, via endpoint POST ou admin panel
-3. Acesse site → redirect ban.html com IP + motivo + pv23778@gmail.com
-4. Desbloqueie via admin.
+Vercel 400/500 errors and UI issues fixed.
 
-**Deploy:** `git add . && git commit -m "IP blocker usa DB PostgreSQL" && git push`
-
-**Resultado final:** Funciona com seu banco! Sem arquivos extras.

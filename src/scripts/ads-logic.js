@@ -16,7 +16,7 @@ function isBlocked() {
     return true;
 }
 
-function registrarPropaganda() {
+async function registrarPropaganda() {
     let count = parseInt(localStorage.getItem('propagandasRodadas') || '0');
     count++;
     localStorage.setItem('propagandasRodadas', String(count));
@@ -24,19 +24,23 @@ function registrarPropaganda() {
         localStorage.setItem('propagandasBloqueadoEm', String(Date.now()));
     }
 
-    fetch('/api/registrar-anuncio', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ timestamp: Date.now() })
-    }).catch(() => {});
+    try {
+        await fetch('/api/admin/admin?section=anuncios&action=registrar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({})
+        });
+    } catch (e) {}
 }
 
-function registrarPrograma(nome) {
-    fetch('/api/registrar-programa', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nome })
-    }).catch(() => {});
+async function registrarPrograma(nome) {
+    try {
+        await fetch('/api/admin/admin?section=programas&action=registrar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nome })
+        });
+    } catch (e) {}
 }
 
 function abrirPrograma(src, link) {

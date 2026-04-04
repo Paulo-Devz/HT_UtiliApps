@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Utili APPS</title>
+  <style>
+    :root {
+      --bg: #f5f5f7;
+      --white: #ffffff;
+      --sidebar-w: 64px;
+      --sidebar-w-open: 240px;
+      --border: #e5e5ea;
+      --text: #1c1c1e;
+      --muted: #8e8e93;
+      --accent: #7c3aed;
+      --accent-soft: #ede9fe;
+      --accent2: #a855f7;
+      --green: #22c55e;
+      --green-soft: #dcfce7;
+      --red: #ef4444;
+      --red-soft: #fee2e2;
+      --yellow: #f59e0b;
+      --yellow-soft: #fef3c7;
+      --blue: #3b82f6;
+      --blue-soft: #dbeafe;
+      --orange: #f97316;
+      --card-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.04);
+      --card-shadow-hover: 0 4px 12px rgba(0,0,0,0.12), 0 8px 24px rgba(0,0,0,0.08);
+      --radius: 14px;
+      --radius-sm: 8px;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      overflow-x: hidden;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      width: var(--sidebar-w);
+      background: var(--white);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 0;
+      z-index: 200;
+      transition: width 0.28s cubic-bezier(.4,0,.2,1);
+      overflow: hidden;
+      box-shadow: 2px 0 12px rgba(0,0,0,0.04);
+    }
+
+    .sidebar:hover, .sidebar.open {
+      width: var(--sidebar-w-open);
+    }
+
+    .sidebar-logo {
+      width: 100%;
+      padding: 0 14px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .sidebar:hover .logo-text, .sidebar.open .logo-text { opacity: 1; }
+
+    .sidebar-nav {
+      flex: 1;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 0 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 10px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 500;
+      width: 100%;
+      text-align: left;
+      transition: all 0.18s;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .nav-icon {
+      font-size: 20px;
+      width: 28px;
+      text-align: center;
+      flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+
+    .nav-label {
+      opacity: 0;
+      transition: opacity 0.18s;
+      font-size: 13px;
+    }
+
+    .sidebar:hover .nav-label, .sidebar.open .nav-label { opacity: 1; }
+
+    .nav-item:hover {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .nav-item:hover .nav-icon { transform: scale(1.1); }
+
+    .nav-item.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .nav-sep {
+      height: 1px;
+      background: var(--border);
+      margin: 6px 8px;
+    }
+
+    .nav-badge {
+      margin-left: auto;
+      background: var(--red);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      border-radius: 20px;
+      padding: 2px 7px;
+      flex-shrink: 0;
+      opacity: 0;
+      transition: opacity 0.18s;
+    }
+
+    .sidebar:hover .nav-badge, .sidebar.open .nav-badge { opacity: 1; }
+    .nav-badge:empty { display: none; }
+
+    .sidebar-bottom {
+      width: 100%;
+      padding: 0 8px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    /* ── MAIN ── */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      transition: margin-left 0.28s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 0 28px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar-left h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .topbar-left p {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .ip-badge {
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-family: 'SF Mono', monospace;
+    }
+
+    .time-badge {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* ── CONTENT ── */
+    .content {
+      padding: 24px 28px;
+      flex: 1;
+    }
+
+    .section { display: none; }
+    .section.active { display: block; animation: fadeIn .2s ease; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ── PERIOD TABS ── */
+    .period-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 24px;
+    }
+
+    .ptab {
+      padding: 7px 16px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .15s;
+    }
+
+    .ptab.on {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    /* ── CARDS ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--card-shadow);
+      transition: box-shadow .2s, transform .2s;
+      border: 1px solid var(--border);
+    }
+
+    .card:hover {
+      box-shadow: var(--card-shadow-hover);
+      transform: translateY(-2px);
+    }
+
+    .card-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+
+    .card-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .card-value {
+      font-size: 36px;
+      font-weight: 900;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .card-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .card.purple .card-icon { background: var(--accent-soft); }
+    .card.green  .card-icon { background: var(--green-soft); }
+    .card.blue   .card-icon { background: var(--blue-soft); }
+    .card.yellow .card-icon { background: var(--yellow-soft); }
+    .card.red    .card-icon { background: var(--red-soft); }
+
+    /* ── PROGRAMS LAYOUT ── */
+    .prog-layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 20px;
+    }
+
+    /* ── TABLE PANEL ── */
+    .panel {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .panel-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .panel-count {
+      font-size: 12px;
+      color: var(--muted);
+      background: var(--bg);
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      padding: 10px 20px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 13px 20px;
+      font-size: 13px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafafa; }
+
+    /* ── TOP PROGRAMS SIDEBAR ── */
+    .top-prog-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .top-prog-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+      transition: background .15s;
+    }
+
+    .top-prog-item:last-child { border-bottom: none; }
+    .top-prog-item:hover { background: var(--bg); }
+
+    .top-rank {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--accent);
+      width: 20px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .top-name {
+      flex: 1;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .top-count {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      background: var(--bg);
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    /* ── BAR ── */
+    .bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bar-bg {
+      flex: 1;
+      height: 6px;
+      background: var(--bg);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transition: width .5s ease;
+    }
+
+    /* ── SEARCH SECTION ── */
+    .search-filters {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .sf-btn {
+      padding: 7px 14px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .15s;
+      color: var(--muted);
+    }
+
+    .sf-btn.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .sf-btn.red.on { background: var(--red); border-color: var(--red); }
+    .sf-btn.yellow.on { background: var(--yellow); border-color: var(--yellow); }
+
+    .search-input-wrap {
+      flex: 1;
+      min-width: 200px;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 8px 14px 8px 36px;
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      font-size: 13px;
+      outline: none;
+      background: var(--white);
+      color: var(--text);
+      transition: border-color .2s;
+    }
+
+    .search-input:focus { border-color: var(--accent); }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    /* ── THREAT BADGES ── */
+    .threat-safe { color: #16a34a; font-weight: 600; }
+    .threat-warn { color: var(--yellow); font-weight: 700; }
+    .threat-danger { color: var(--red); font-weight: 700; }
+
+    .threat-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .threat-tag.safe { background: var(--green-soft); color: #16a34a; }
+    .threat-tag.warn { background: var(--yellow-soft); color: #b45309; }
+    .threat-tag.danger { background: var(--red-soft); color: var(--red); }
+
+    .search-term-safe { color: var(--text); }
+    .search-term-warn { color: var(--yellow); font-weight: 600; }
+    .search-term-danger { color: var(--red); font-weight: 700; }
+
+    /* ── IP BLOCK ── */
+    .ip-form {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .ip-input {
+      flex: 1;
+      min-width: 140px;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      outline: none;
+      background: var(--white);
+      color: var(--text);
+      transition: border-color .2s;
+      font-family: 'SF Mono', monospace;
+    }
+
+    .ip-input:focus { border-color: var(--accent); }
+
+    .btn-danger {
+      padding: 10px 20px;
+      background: var(--red);
+      border: none;
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity .15s;
+    }
+
+    .btn-danger:hover { opacity: .85; }
+
+    .btn-sm {
+      padding: 5px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      background: transparent;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .15s;
+      color: var(--muted);
+    }
+
+    .btn-sm.red { border-color: var(--red); color: var(--red); }
+    .btn-sm.red:hover { background: var(--red-soft); }
+
+    .btn-sm.green { border-color: var(--green); color: var(--green); }
+    .btn-sm.green:hover { background: var(--green-soft); }
+
+    /* ── INTELLISENSE ── */
+    .intellisense {
+      position: fixed;
+      background: #1e1b2e;
+      border: 1px solid #3d3566;
+      border-radius: 10px;
+      padding: 6px;
+      width: 280px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      z-index: 999;
+      display: none;
+    }
+
+    .intellisense.open { display: block; animation: fadeIn .15s ease; }
+
+    .intellisense-title {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #7c5cbf;
+      padding: 4px 8px;
+      margin-bottom: 4px;
+    }
+
+    .intellisense-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: background .12s;
+    }
+
+    .intellisense-item:hover { background: #2d2845; }
+
+    .int-icon {
+      font-size: 16px;
+      width: 24px;
+      text-align: center;
+    }
+
+    .int-info { flex: 1; }
+
+    .int-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #e2d9f3;
+    }
+
+    .int-sub {
+      font-size: 11px;
+      color: #7c5cbf;
+      margin-top: 1px;
+    }
+
+    .int-type {
+      font-size: 10px;
+      font-weight: 700;
+      color: #a78bfa;
+      background: #2d2845;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .int-sep { height: 1px; background: #3d3566; margin: 4px 0; }
+
+    /* ── SECTION HEADER ── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .section-subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ── LOADING ── */
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .spinner {
+      width: 20px; height: 20px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+      margin: 0 auto 12px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--text);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: all .2s;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .toast.on { opacity: 1; transform: translateY(0); }
+
+    /* ── TEMPLATE COMMENT ── */
+    .template-hint {
+      background: #f5f3ff;
+      border: 1.5px dashed #c4b5fd;
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .template-hint .hint-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+    .template-hint .hint-text { font-size: 13px; color: #6d28d9; line-height: 1.6; }
+    .template-hint code { background: #ede9fe; padding: 2px 6px; border-radius: 4px; font-size: 12px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .prog-layout { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 680px) {
+      .content { padding: 16px; }
+      .topbar { padding: 0 16px; }
+      .cards-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ INTELLISENSE POPUP ══ -->
+<div class="intellisense" id="intellisense">
+  <div class="intellisense-title">⚡ Ações rápidas</div>
+  <div class="intellisense-item" onclick="navTo('anuncios')">
+    <span class="int-icon">📊</span>
+    <div class="int-info">
+      <div class="int-label">Anúncios</div>
+      <div class="int-sub">Ver propagandas rodadas</div>
+    </div>
+    <span class="int-type">stats</span>
+  </div>
+  <div class="intellisense-item" onclick="navTo('programas')">
+    <span class="int-icon">🖥️</span>
+    <div class="int-info">
+      <div class="int-label">Programas</div>
+      <div class="int-sub">Histórico de uso</div>
+    </div>
+    <span class="int-type">list</span>
+  </div>
+  <div class="int-sep"></div>
+  <div class="intellisense-item" onclick="navTo('pesquisas')">
+    <span class="int-icon">🔍</span>
+    <div class="int-info">
+      <div class="int-label">Pesquisas</div>
+      <div class="int-sub">Monitor de buscas</div>
+    </div>
+    <span class="int-type">monitor</span>
+  </div>
+  <div class="intellisense-item" onclick="navTo('ips')">
+    <span class="int-icon">🛡️</span>
+    <div class="int-info">
+      <div class="int-label">IPs Bloqueados</div>
+      <div class="int-sub">Gerenciar bloqueios</div>
+    </div>
+    <span class="int-type">security</span>
+  </div>
+  <div class="int-sep"></div>
+  <div class="intellisense-item" onclick="navTo('config')">
+    <span class="int-icon">⚙️</span>
+    <div class="int-info">
+      <div class="int-label">Configurações</div>
+      <div class="int-sub">Reset de históricos</div>
+    </div>
+    <span class="int-type">config</span>
+  </div>
+</div>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">⚡</div>
+    <span class="logo-text">Utili Admin</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <button class="nav-item active" id="nav-anuncios" onclick="navTo('anuncios')">
+      <span class="nav-icon">📊</span>
+      <span class="nav-label">Anúncios</span>
+    </button>
+    <button class="nav-item" id="nav-programas" onclick="navTo('programas')">
+      <span class="nav-icon">🖥️</span>
+      <span class="nav-label">Programas</span>
+    </button>
+    <button class="nav-item" id="nav-pesquisas" onclick="navTo('pesquisas')">
+      <span class="nav-icon">🔍</span>
+      <span class="nav-label">Pesquisas</span>
+      <span class="nav-badge" id="badge-pesquisas"></span>
+    </button>
+
+    <div class="nav-sep"></div>
+
+    <button class="nav-item" id="nav-ips" onclick="navTo('ips')">
+      <span class="nav-icon">🛡️</span>
+      <span class="nav-label">IPs Bloqueados</span>
+    </button>
+
+    <div class="nav-sep"></div>
+
+    <button class="nav-item" id="nav-config" onclick="navTo('config')">
+      <span class="nav-icon">⚙️</span>
+      <span class="nav-label">Configurações</span>
+    </button>
+
+    <div class="nav-sep"></div>
+
+    <!-- ══ TEMPLATE: copie este bloco para adicionar seções ══
+    <button class="nav-item" id="nav-NOME" onclick="navTo('NOME')">
+      <span class="nav-icon">EMOJI</span>
+      <span class="nav-label">Nome da Seção</span>
+    </button>
+    ══ FIM TEMPLATE ══ -->
+  </nav>
+
+  <div class="sidebar-bottom">
+    <button class="nav-item" onclick="toggleIntelliSense(event)">
+      <span class="nav-icon">⌨️</span>
+      <span class="nav-label">Ações rápidas</span>
+    </button>
+  </div>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1>Olá, Admin! 👋</h1>
+      <p id="topbar-subtitle">Painel de administração — Utili APPS</p>
+    </div>
+    <div class="topbar-right">
+      <span class="time-badge" id="clock"></span>
+      <span class="ip-badge" id="client-ip">Carregando...</span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ══ ANÚNCIOS ══ -->
+    <div class="section active" id="sec-anuncios">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Anúncios</div>
+          <div class="section-subtitle">Propagandas rodadas no período</div>
+        </div>
+        <div class="period-row" style="margin:0">
+          <button class="ptab on" onclick="setPeriodo('anuncios','1d',this)">Hoje</button>
+          <button class="ptab" onclick="setPeriodo('anuncios','7d',this)">7 dias</button>
+          <button class="ptab" onclick="setPeriodo('anuncios','30d',this)">30 dias</button>
+        </div>
+      </div>
+
+      <div class="cards-grid">
+        <div class="card purple">
+          <div class="card-icon">📺</div>
+          <div class="card-label">Total rodados</div>
+          <div class="card-value" id="ad-total">—</div>
+          <div class="card-sub" id="ad-periodo">no período</div>
+        </div>
+        <div class="card green">
+          <div class="card-icon">💰</div>
+          <div class="card-label">Média por dia</div>
+          <div class="card-value" id="ad-media">—</div>
+          <div class="card-sub">anúncios/dia</div>
+        </div>
+        <div class="card blue" style="display: none;">
+          <div class="card-icon">🔄</div>
+          <div class="card-label">Bloqueios ativos</div>
+          <div class="card-value" id="ad-bloqueios">—</div>
+          <div class="card-sub">usuários em pausa</div>
+        </div>
+        <div class="card purple" style="display: none;">
+          <div class="card-icon">🏆</div>
+          <div class="card-label">Data recorde</div>
+          <div class="card-value" id="ad-recorde">—</div>
+          <div class="card-sub">mais anúncios</div>
+        </div>
+        <!-- TEMPLATE CARD: copie para adicionar métrica
+        <div class="card yellow">
+          <div class="card-icon">⭐</div>
+          <div class="card-label">Minha Métrica</div>
+          <div class="card-value" id="minha-metrica">—</div>
+          <div class="card-sub">descrição</div>
+        </div>
+        -->
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Histórico de anúncios</span>
+        </div>
+        <div id="ad-history">
+          <div class="loading"><div class="spinner"></div>Carregando...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PROGRAMAS ══ -->
+    <div class="section" id="sec-programas">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Programas</div>
+          <div class="section-subtitle">Histórico e ranking de uso</div>
+        </div>
+        <div class="period-row" style="margin:0">
+          <button class="ptab on" onclick="setPeriodo('programas','1d',this)">Hoje</button>
+          <button class="ptab" onclick="setPeriodo('programas','7d',this)">7 dias</button>
+          <button class="ptab" onclick="setPeriodo('programas','30d',this)">30 dias</button>
+        </div>
+      </div>
+
+      <div class="cards-grid">
+        <div class="card purple">
+          <div class="card-icon">🖥️</div>
+          <div class="card-label">Acessos totais</div>
+          <div class="card-value" id="prog-total">—</div>
+          <div class="card-sub">no período</div>
+        </div>
+        <div class="card blue">
+          <div class="card-icon">🏆</div>
+          <div class="card-label">Mais popular</div>
+          <div class="card-value" style="font-size:18px" id="prog-top">—</div>
+          <div class="card-sub">programa #1</div>
+        </div>
+        <div class="card green">
+          <div class="card-icon">📱</div>
+          <div class="card-label">Programas únicos</div>
+          <div class="card-value" id="prog-unique">—</div>
+          <div class="card-sub">diferentes acessados</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:16px">
+        <div class="search-input-wrap" style="max-width:400px">
+          <span class="search-icon">🔍</span>
+          <input class="search-input" id="prog-search" placeholder="Buscar por programa ou IP..." oninput="searchProgramas()" />
+        </div>
+      </div>
+
+      <div class="prog-layout">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Histórico completo</span>
+            <span class="panel-count" id="prog-hist-count"></span>
+          </div>
+          <div id="prog-history">
+            <div class="loading"><div class="spinner"></div>Carregando...</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">🏆 Top Programas</span>
+          </div>
+          <div class="top-prog-list" id="prog-top-list">
+            <div class="loading"><div class="spinner"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PESQUISAS ══ -->
+    <div class="section" id="sec-pesquisas">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Pesquisas</div>
+          <div class="section-subtitle">Monitor de buscas — detecta termos suspeitos</div>
+        </div>
+        <div class="period-row" style="margin:0">
+          <button class="ptab on" onclick="setPeriodo('pesquisas','1d',this)">Hoje</button>
+          <button class="ptab" onclick="setPeriodo('pesquisas','7d',this)">7 dias</button>
+          <button class="ptab" onclick="setPeriodo('pesquisas','30d',this)">30 dias</button>
+        </div>
+      </div>
+
+      <div class="cards-grid">
+        <div class="card blue">
+          <div class="card-icon">🔍</div>
+          <div class="card-label">Total de buscas</div>
+          <div class="card-value" id="sq-total">—</div>
+          <div class="card-sub">no período</div>
+        </div>
+        <div class="card red">
+          <div class="card-icon">⚠️</div>
+          <div class="card-label">Suspeitas</div>
+          <div class="card-value" id="sq-danger">—</div>
+          <div class="card-sub">requerem atenção</div>
+        </div>
+        <div class="card yellow">
+          <div class="card-icon">🟡</div>
+          <div class="card-label">Alertas</div>
+          <div class="card-value" id="sq-warn">—</div>
+          <div class="card-sub">palavras de atenção</div>
+        </div>
+      </div>
+
+      <div class="search-filters">
+        <div class="search-input-wrap">
+          <span class="search-icon">🔍</span>
+          <input class="search-input" id="sq-filter-input" placeholder="Filtrar por termo ou IP..." oninput="filterSearches()" />
+        </div>
+        <button class="sf-btn on" data-filter="all" onclick="setSqFilter('all',this)">Todos</button>
+        <button class="sf-btn red" data-filter="danger" onclick="setSqFilter('danger',this)">⚠️ Suspeitos</button>
+        <button class="sf-btn yellow" data-filter="warn" onclick="setSqFilter('warn',this)">🟡 Alertas</button>
+        <button class="sf-btn" data-filter="safe" onclick="setSqFilter('safe',this)">✅ Seguros</button>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Registro de pesquisas</span>
+          <span class="panel-count" id="sq-count"></span>
+        </div>
+        <div id="sq-table">
+          <div class="loading"><div class="spinner"></div>Carregando...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ IPs BLOQUEADOS ══ -->
+    <div class="section" id="sec-ips">
+      <div class="section-header">
+        <div>
+          <div class="section-title">IPs Bloqueados</div>
+          <div class="section-subtitle">Gerencie o acesso ao site</div>
+        </div>
+      </div>
+
+      <div class="ip-form">
+        <input class="ip-input" id="ip-val" placeholder="192.168.0.1" />
+        <input class="ip-input" id="ip-motivo" placeholder="Motivo (opcional)" style="max-width:220px;font-family:inherit" />
+        <button class="btn-danger" onclick="blockIp()">🚫 Bloquear</button>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Lista de bloqueios</span>
+          <span class="panel-count" id="ips-count"></span>
+        </div>
+        <div id="ips-table">
+          <div class="loading"><div class="spinner"></div>Carregando...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ CONFIGURAÇÕES ══ -->
+    <div class="section" id="sec-config">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Configurações</div>
+          <div class="section-subtitle">Gerencie os históricos e limites do painel</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px">
+
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">📺 Anúncios</span></div>
+          <div style="padding:20px;display:flex;flex-direction:column;gap:14px">
+            <div style="font-size:13px;color:var(--muted);line-height:1.6">Registros no banco: <strong id="cfg-ad-count">—</strong><br>Limite máximo: <strong>500</strong></div>
+            <div style="height:8px;background:var(--bg);border-radius:4px;overflow:hidden">
+              <div id="cfg-ad-bar" style="height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:4px;width:0%;transition:width .5s"></div>
+            </div>
+            <button class="btn-danger" onclick="resetarHistorico('anuncios')">🗑️ Resetar histórico de anúncios</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">🖥️ Programas</span></div>
+          <div style="padding:20px;display:flex;flex-direction:column;gap:14px">
+            <div style="font-size:13px;color:var(--muted);line-height:1.6">Registros no banco: <strong id="cfg-prog-count">—</strong><br>Limite máximo: <strong>500</strong></div>
+            <div style="height:8px;background:var(--bg);border-radius:4px;overflow:hidden">
+              <div id="cfg-prog-bar" style="height:100%;background:linear-gradient(90deg,var(--green),#16a34a);border-radius:4px;width:0%;transition:width .5s"></div>
+            </div>
+            <button class="btn-danger" onclick="resetarHistorico('programas')">🗑️ Resetar histórico de programas</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">🔍 Pesquisas</span></div>
+          <div style="padding:20px;display:flex;flex-direction:column;gap:14px">
+            <div style="font-size:13px;color:var(--muted);line-height:1.6">Registros no banco: <strong id="cfg-sq-count">—</strong><br>Limite máximo: <strong>500</strong></div>
+            <div style="height:8px;background:var(--bg);border-radius:4px;overflow:hidden">
+              <div id="cfg-sq-bar" style="height:100%;background:linear-gradient(90deg,var(--blue),#1d4ed8);border-radius:4px;width:0%;transition:width .5s"></div>
+            </div>
+            <button class="btn-danger" onclick="resetarHistorico('pesquisas')">🗑️ Resetar histórico de pesquisas</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">🛡️ IPs Bloqueados</span></div>
+          <div style="padding:20px;display:flex;flex-direction:column;gap:14px">
+            <div style="font-size:13px;color:var(--muted);line-height:1.6">Total bloqueados: <strong id="cfg-ip-count">—</strong></div>
+            <button class="btn-danger" onclick="resetarHistorico('ips')">🗑️ Remover todos os bloqueios</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="margin-top:28px">
+        <div class="template-hint">
+          <span class="hint-icon">📋</span>
+          <div class="hint-text">
+            <strong>SQL da tabela pesquisas</strong> — execute isso no MySQL Workbench antes de usar a seção de pesquisas:<br><br>
+            <code>CREATE TABLE pesquisas ( id INT AUTO_INCREMENT PRIMARY KEY, ip VARCHAR(45) NOT NULL, termo VARCHAR(500) NOT NULL, nivel ENUM('safe','warn','danger') DEFAULT 'safe', criado_em DATETIME DEFAULT NOW() );</code>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ TEMPLATE SEÇÃO ══ -->
+    <!-- COMO ADICIONAR UMA NOVA SEÇÃO:
+      1. Copie o bloco abaixo
+      2. Troque NOME pelo id da seção (ex: "relatorios")
+      3. Adicione o nav-item na sidebar (veja comentário lá)
+      4. No JS, adicione o case no switch dentro de navTo()
+      5. Crie a função load da seção e chame-a
+    ══════════════════════════════════════════════
+    <div class="section" id="sec-NOME">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Nome da Seção</div>
+          <div class="section-subtitle">Descrição breve</div>
+        </div>
+      </div>
+
+      <div class="cards-grid">
+        <div class="card purple">
+          <div class="card-icon">📌</div>
+          <div class="card-label">Minha Métrica</div>
+          <div class="card-value" id="minha-metrica">—</div>
+          <div class="card-sub">descrição</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Minha Tabela</span>
+        </div>
+        <div id="minha-tabela">
+          <div class="loading"><div class="spinner"></div>Carregando...</div>
+        </div>
+      </div>
+    </div>
+    ══ FIM TEMPLATE ══ -->
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+fetch('/api/check-ip')
+  .then(res => {
+    if (!res.ok) {
+      window.location.href = '/'
+    }
+  })
+</script>
+
+<script>
+  // api
+  let periodos = { anuncios:'1d', programas:'1d', pesquisas:'1d' };
+  let sqFilter = 'all';
+  let sqData   = [];
+
+  const TERMOS_PERIGO = ['script','<','>',' OR ','--','SELECT','DROP','INSERT','DELETE','UPDATE','UNION','exec','eval','base64','alert(','document.','window.','fetch(','XMLHttp'];
+  const TERMOS_ATENCAO = ['hack','sql','admin','pass','senha','root','token','api','key','xss','csrf','injection','bypass','exploit'];
+
+  function classifySearch(term) {
+    const t = term.toLowerCase();
+    if (TERMOS_PERIGO.some(p => t.includes(p.toLowerCase()))) return 'danger';
+    if (TERMOS_ATENCAO.some(p => t.includes(p))) return 'warn';
+    return 'safe';
+  }
+
+  function toast(msg, color) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.style.background = color || '#1c1c1e';
+    el.classList.add('on');
+    setTimeout(() => el.classList.remove('on'), 2600);
+  }
+
+  function navTo(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    document.getElementById('sec-' + id).classList.add('active');
+    const navEl = document.getElementById('nav-' + id);
+    if (navEl) navEl.classList.add('active');
+    closeIntelliSense();
+
+    switch(id) {
+      case 'anuncios':  loadAnuncios();  break;
+      case 'programas': loadProgramas(); break;
+      case 'pesquisas': loadPesquisas(); break;
+      case 'ips':       loadIps();       break;
+      case 'config':    loadConfig();    break;
+      /* TEMPLATE: adicione seu case aqui
+      case 'NOME': loadNome(); break;
+      */
+    }
+  }
+
+  function setPeriodo(sec, p, el) {
+    periodos[sec] = p;
+    el.closest('.period-row').querySelectorAll('.ptab').forEach(b => b.classList.remove('on'));
+    el.classList.add('on');
+    navTo(sec);
+  }
+
+  function setSqFilter(f, el) {
+    sqFilter = f;
+    document.querySelectorAll('.sf-btn').forEach(b => b.classList.remove('on'));
+    el.classList.add('on');
+    renderSearchTable();
+  }
+
+  function filterSearches() { renderSearchTable(); }
+
+  /* ── API ── */
+  const API = {
+    anuncios:  '/api/admin_reneavues/anuncios',
+    programas: '/api/admin_reneavues/progamas',
+    pesquisas: '/api/admin_reneavues/pesquisas',
+    ips:       '/api/admin_reneavues/ips',
+  };
+
+  async function apiGet(endpoint, params) {
+    const url = typeof endpoint === 'string' && endpoint.startsWith('/') ? endpoint : (API[endpoint] || '/api/admin-data');
+    const q = new URLSearchParams(params || {}).toString();
+    const r = await fetch(`${url}?${q}`, { credentials:'same-origin', cache:'no-store' });
+    if (!r.ok) throw new Error('Erro ' + r.status);
+    return r.json();
+  }
+
+  async function apiPost(endpoint, action, body) {
+    const url = typeof endpoint === 'string' && endpoint.startsWith('/') ? endpoint : (API[endpoint] || '/api/admin-data');
+    const r = await fetch(`${url}?action=${action}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify(body || {})
+    });
+    return r.json();
+  }
+
+  /* ── ANÚNCIOS ── */
+  async function loadAnuncios() {
+    try {
+      const data = await apiGet('anuncios', { action: 'stats', periodo: periodos.anuncios });
+      const total = data.total || 0;
+      const dias  = { '1d':1, '7d':7, '30d':30 }[periodos.anuncios] || 1;
+      document.getElementById('ad-total').textContent = total;
+      document.getElementById('ad-media').textContent = (total / (data.dias || 1)).toFixed(1);
+      document.getElementById('ad-bloqueios').textContent = '—';
+      
+      // Data recorde
+      if (data.data_max) {
+        const dataFmt = new Date(data.data_max + 'T00:00:00').toLocaleDateString('pt-BR');
+        document.getElementById('ad-recorde').textContent = `${dataFmt} (${data.total_max})`;
+      } else {
+        document.getElementById('ad-recorde').textContent = '—';
+      }
+      
+      const labels = { '1d':'hoje', '7d':'nos últimos 7 dias', '30d':'nos últimos 30 dias' };
+
+      const hist = data.historico || [];
+      document.getElementById('ad-history').innerHTML = hist.length
+        ? `<table><thead><tr><th>Data</th><th>Anúncios</th><th>Variação</th></tr></thead><tbody>
+           ${hist.map((h,i) => `<tr>
+             <td>${new Date(h.data).toLocaleDateString('pt-BR')}</td>
+             <td><strong>${h.total}</strong></td>
+             <td style="color:${h.total >= (hist[i+1]?.total||0) ? 'var(--green)' : 'var(--red)'}">${h.total >= (hist[i+1]?.total||0) ? '↑' : '↓'}</td>
+           </tr>`).join('')}
+           </tbody></table>`
+        : '<div class="loading">Sem dados no período.</div>';
+    } catch(e) {
+      document.getElementById('ad-history').innerHTML = '<div class="loading">Erro ao carregar.</div>';
+    }
+  }
+
+  /* ── PROGRAMAS ── */
+  async function loadProgramas() {
+    try {
+      const [stats, rankingData, histData] = await Promise.all([
+        apiGet('programas', { action: 'stats', periodo: periodos.programas }),
+        apiGet('programas', { action: 'ranking', periodo: periodos.programas }),
+        apiGet('programas', { action: 'historico', periodo: periodos.programas })
+      ]);
+      
+      document.getElementById('prog-total').textContent  = stats.acessos || 0;
+      document.getElementById('prog-top').textContent    = stats.top || '—';
+      document.getElementById('prog-unique').textContent = stats.unicos || 0;
+      
+      const progs = rankingData.ranking || [];
+      document.getElementById('prog-top-list').innerHTML = progs.slice(0,8).map((p,i) => `
+        <div class="top-prog-item">
+          <span class="top-rank">${i+1}</span>
+          <span class="top-name">${p.progama_nome || '—'}</span>
+          <span class="top-count">${p.usos}</span>
+        </div>`).join('') || '<div class="loading">Sem dados.</div>';
+      
+      const rows = histData.historico || [];
+      document.getElementById('prog-hist-count').textContent = rows.length + ' registros';
+      
+      document.getElementById('prog-history').innerHTML = rows.length
+        ? `<table><thead><tr><th>#</th><th>Programa</th><th>IP</th><th>Data</th></tr></thead><tbody>
+          ${rows.map((r,i) => `<tr>
+            <td><strong style="color:var(--accent)">${i+1}</strong></td>
+            <td>${r.progama_nome || '—'}</td>
+            <td><code style="font-size:11px;color:var(--muted)">${r.ip || '—'}</code></td>
+            <td style="font-size:12px;color:var(--muted)">${new Date(r.criado_em).toLocaleString('pt-BR')}</td>
+          </tr>`).join('')}
+          </tbody></table>`
+        : '<div class="loading">Nenhum dado no período.</div>';
+        
+    } catch(e) {
+      document.getElementById('prog-history').innerHTML = '<div class="loading">Erro ao carregar.</div>';
+    }
+  }
+
+  /* ── PESQUISAS ── */
+  async function loadPesquisas() {
+    try {
+      const data = await apiGet('pesquisas', { action: 'historico', periodo: periodos.pesquisas });
+      sqData = (data.pesquisas || []);
+
+      const danger = sqData.filter(s => s.nivel === 'danger').length;
+      const warn   = sqData.filter(s => s.nivel === 'warn').length;
+
+
+      document.getElementById('sq-total').textContent  = sqData.length;
+      document.getElementById('sq-danger').textContent = danger;
+      document.getElementById('sq-warn').textContent   = warn;
+
+      const badge = document.getElementById('badge-pesquisas');
+      badge.textContent = danger > 0 ? danger : '';
+
+      renderSearchTable();
+    } catch(e) {
+      document.getElementById('sq-table').innerHTML = '<div class="loading">Erro ao carregar.</div>';
+    }
+  }
+
+  function renderSearchTable() {
+    const query = document.getElementById('sq-filter-input').value.toLowerCase();
+    let list = sqData;
+    if (sqFilter !== 'all') list = list.filter(s => s.nivel === sqFilter);
+
+
+    if (query) list = list.filter(s =>
+      (s.termo||s.busca||'').toLowerCase().includes(query) ||
+      (s.ip||'').includes(query)
+    );
+
+    document.getElementById('sq-count').textContent = list.length + ' registros';
+
+    const icons = { safe:'✅', warn:'🟡', danger:'⚠️' };
+    const labels = { safe:'Seguro', warn:'Alerta', danger:'Suspeito' };
+
+    document.getElementById('sq-table').innerHTML = list.length
+      ? `<table><thead><tr><th>Data / Hora</th><th>IP</th><th>Termo buscado</th><th>Status</th><th>Ação</th></tr></thead><tbody>
+         ${list.map(s => `<tr>
+           <td style="font-size:12px;color:var(--muted)">${new Date(s.criado_em).toLocaleString('pt-BR')}</td>
+           <td><code style="font-size:12px;color:var(--accent)">${s.ip || '—'}</code></td>
+           <td class="search-term-${s.nivel}">${s.termo || s.busca || '—'}</td>
+           <td><span class="threat-tag ${s.nivel}">${icons[s.nivel]} ${labels[s.nivel]}</span></td>
+           <td><button class="btn-sm red" onclick="blockIpDirect('${s.ip}')">Bloquear IP</button></td>
+         </tr>`).join('')}
+         </tbody></table>`
+      : '<div class="loading">Nenhuma pesquisa no período.</div>';
+  }
+
+  /* ── IPs ── */
+  async function loadIps() {
+    try {
+      const data = await apiGet('ips', { action: 'listar' });
+      const ips = data.ips || [];
+      document.getElementById('ips-count').textContent = ips.length + ' IPs';
+      document.getElementById('ips-table').innerHTML = ips.length
+        ? `<table><thead><tr><th>IP</th><th>Motivo</th><th>Bloqueado em</th><th>Ação</th></tr></thead><tbody>
+           ${ips.map(ip => `<tr>
+             <td><code style="color:var(--accent);font-size:13px">${ip.ip}</code></td>
+             <td style="color:var(--muted)">${ip.motivo || '—'}</td>
+             <td style="font-size:12px;color:var(--muted)">${new Date(ip.criado_em).toLocaleString('pt-BR')}</td>
+             <td><button class="btn-sm green" onclick="unblockIp('${ip.ip}')">Desbloquear</button></td>
+           </tr>`).join('')}
+           </tbody></table>`
+        : '<div class="loading">Nenhum IP bloqueado.</div>';
+    } catch(e) {
+      document.getElementById('ips-table').innerHTML = '<div class="loading">Erro ao carregar.</div>';
+    }
+  }
+
+  async function blockIp() {
+    const ip     = document.getElementById('ip-val').value.trim();
+    const motivo = document.getElementById('ip-motivo').value.trim();
+    if (!ip) { toast('Digite um IP', '#f59e0b'); return; }
+    await apiPost('ips', 'bloquear', { ip, motivo });
+    document.getElementById('ip-val').value = '';
+    document.getElementById('ip-motivo').value = '';
+    toast('IP bloqueado: ' + ip, '#ef4444');
+    loadIps();
+  }
+
+  async function blockIpDirect(ip) {
+    if (!ip || ip === '—') return;
+    await apiPost('ips', 'bloquear', { ip, motivo: 'bloqueado via pesquisas suspeitas' });
+    toast('IP bloqueado: ' + ip, '#ef4444');
+    loadIps();
+  }
+
+  async function unblockIp(ip) {
+    await apiPost('ips', 'desbloquear', { ip });
+    toast('IP desbloqueado: ' + ip, '#22c55e');
+    loadIps();
+  }
+
+  /* ── INTELLISENSE ── */
+  function toggleIntelliSense(e) {
+    e.stopPropagation();
+    const el = document.getElementById('intellisense');
+    if (el.classList.contains('open')) { closeIntelliSense(); return; }
+    el.style.left = (document.getElementById('sidebar').offsetWidth + 8) + 'px';
+    el.style.bottom = '16px';
+    el.classList.add('open');
+  }
+
+  function closeIntelliSense() {
+    document.getElementById('intellisense').classList.remove('open');
+  }
+
+  document.addEventListener('click', closeIntelliSense);
+
+  /* ── CLOCK ── */
+  function updateClock() {
+    document.getElementById('clock').textContent = new Date().toLocaleString('pt-BR');
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  /* ── CLIENT IP ── */
+  fetch('https://api.ipify.org?format=json')
+    .then(r => r.json())
+    .then(d => document.getElementById('client-ip').textContent = 'IP: ' + d.ip)
+    .catch(() => document.getElementById('client-ip').textContent = 'IP: —');
+
+  /* ── SEARCH PROGRAMAS ── */
+  let progDataCache = [];
+
+  async function searchProgramas() {
+    const q = document.getElementById('prog-search').value.trim();
+    try {
+      const data = await apiGet('programas', { action: 'historico', periodo: periodos.programas, search: q });
+      const rows = data.historico || [];
+      document.getElementById('prog-hist-count').textContent = rows.length + ' registros';
+      document.getElementById('prog-history').innerHTML = rows.length
+        ? `<table><thead><tr><th>#</th><th>Programa</th><th>IP</th><th>Data</th></tr></thead><tbody>
+           ${rows.map((r,i) => `<tr>
+             <td><strong style="color:var(--accent)">${i+1}</strong></td>
+             <td>${r['progama-nome'] || '—'}</td>
+             <td><code style="font-size:11px;color:var(--muted)">${r.ip || '—'}</code></td>
+             <td style="font-size:12px;color:var(--muted)">${new Date(r.criado_em).toLocaleString('pt-BR')}</td>
+           </tr>`).join('')}
+           </tbody></table>`
+        : '<div class="loading">Nenhum resultado.</div>';
+    } catch(e) {}
+  }
+
+  /* ── CONFIG ── */
+  async function loadConfig() {
+    try {
+      const [ad, prog, sq, ips] = await Promise.all([
+        apiGet('anuncios',  { action: 'stats', periodo: '30d' }),
+        apiGet('programas', { action: 'stats', periodo: '30d' }),
+        apiGet('pesquisas', { action: 'stats', periodo: '30d' }),
+        apiGet('ips',       { action: 'listar' }),
+      ]);
+
+      const setBar = (id, bar, val) => {
+        const pct = Math.min(100, Math.round((val / 500) * 100));
+        document.getElementById(id).textContent = val;
+        document.getElementById(bar).style.width = pct + '%';
+      };
+
+      setBar('cfg-ad-count',   'cfg-ad-bar',   ad.total_banco   || 0);
+      setBar('cfg-prog-count', 'cfg-prog-bar',  prog.total_banco || 0);
+      setBar('cfg-sq-count',   'cfg-sq-bar',    sq.total_banco   || 0);
+      document.getElementById('cfg-ip-count').textContent = ips.total || 0;
+    } catch(e) {}
+  }
+
+  async function resetarHistorico(tipo) {
+    if (!confirm('Resetar histórico de ' + tipo + '? Isso apaga todos os registros.')) return;
+    try {
+      const ep = tipo === 'ips' ? 'ips' : tipo;
+      const ac = tipo === 'ips' ? 'desbloquear-todos' : 'resetar';
+      if (tipo === 'ips') {
+        const data = await apiGet('ips', { action: 'listar' });
+        for (const ip of (data.ips || [])) {
+          await apiPost('ips', 'desbloquear', { ip: ip.ip });
+        }
+      } else {
+        await apiPost(ep, 'resetar', {});
+      }
+      toast('Histórico de ' + tipo + ' resetado!', '#22c55e');
+      loadConfig();
+    } catch(e) { toast('Erro ao resetar', '#ef4444'); }
+  }
+
+  /* ── INIT ── */
+  loadAnuncios();
+</script>
+</body>
+</html>

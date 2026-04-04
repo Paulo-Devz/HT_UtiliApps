@@ -4,7 +4,7 @@
     const ipRes = await fetch('https://api.ipify.org?format=json');
     const { ip } = await ipRes.json();
 
-    const checkRes = await fetch(`/api/admin_reneavues/ips?action=check&ip=${ip}`);
+    const checkRes = await fetch(`/api/admin?section=ips&action=check&ip=${ip}`);
     const data = await checkRes.json();
 
     if (data.bloqueado) {

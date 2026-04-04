@@ -1,12 +1,19 @@
-# Plano: Fix Tabela Anúncios + Data Recorde - ✅ CONCLUÍDO
+# IP Blocker Fix (DB PostgreSQL) - ✅ CONCLUÍDO
 
-## Passos completados:
-- ✅ 1. UNIQUE constraint adicionado (evita duplicatas de data)
-- ✅ 2. Backend retorna data_max/total_max (recorde all-time)
-- ✅ 3. Frontend: novo card "Data recorde: DD/MM (X)" na seção Anúncios
+## Mudança: Usa seu BANCO ips_bloqueados existente!
 
-**Resultado:** Todas as datas agora aparecem na tabela (uma linha única por data via constraint + query), somadas corretamente. Card recorde mostra data com mais propagandas.
+**Arquivos:**
+- ✅ api/admin_reneavues/ips.js: check agora retorna motivo
+- ✅ Removidos JSONs desnecessários
+- ✅ ip-blocker.js: endpoint correto + motivo
+- ✅ ban.html: ajustada pra DB + design branco/quadrado solicitado
 
-**Teste:** Acesse admin.html, vá em Anúncios – veja tabela completa + novo card 🏆.
+## Como testar:
+1. Seu IP atual: abra https://api.ipify.org
+2. Bloqueie via admin.html → Anúncios? Não, via endpoint POST ou admin panel
+3. Acesse site → redirect ban.html com IP + motivo + pv23778@gmail.com
+4. Desbloqueie via admin.
 
-**Próximo:** Recarregue página para ver mudanças.
+**Deploy:** `git add . && git commit -m "IP blocker usa DB PostgreSQL" && git push`
+
+**Resultado final:** Funciona com seu banco! Sem arquivos extras.

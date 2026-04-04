@@ -23,12 +23,27 @@ function registrarPropaganda() {
     if (count >= MAX_ADS) {
         localStorage.setItem('propagandasBloqueadoEm', String(Date.now()));
     }
+
+    fetch('/api/registrar-anuncio', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ timestamp: Date.now() })
+    }).catch(() => {});
+}
+
+function registrarPrograma(nome) {
+    fetch('/api/registrar-programa', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nome })
+    }).catch(() => {});
 }
 
 function abrirPrograma(src, link) {
     if (link) {
         window.open(link, '_blank');
         registrarPropaganda();
+        registrarPrograma(link);
         return;
     }
 
@@ -38,6 +53,8 @@ function abrirPrograma(src, link) {
     }
 
     const destino = src.replace(/.*Apps\//, '').replace('/main.html', '');
+
+    registrarPrograma(destino);
 
     if (isBlocked()) {
         window.open('Apps/' + destino + '/main.html', '_blank');
